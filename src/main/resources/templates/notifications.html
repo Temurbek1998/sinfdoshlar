@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Bildirishnomalar')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<div class="page two">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main class="main-col">
+        <section class="card">
+            <h2 class="card-title">Bildirishnomalar</h2>
+            <div th:if="${items.isEmpty()}" class="empty">
+                <svg class="i i-xl"><use href="/img/icons.svg#bell"/></svg>
+                <p class="muted">Hozircha bildirishnomalar yo'q. Do'stlaringiz postingizga klass bossa yoki izoh yozsa, shu yerda ko'rinadi.</p>
+            </div>
+            <div class="notif" th:each="n : ${items}" th:classappend="${!n.seen} ? 'new'">
+                <a class="notif-avatar" th:href="@{/profile/{u}(u=${n.actor.username})}">
+                    <span class="avatar avatar-48" th:style="${n.actor.avatarStyle}" th:text="${n.actor.avatarLetter}">A</span>
+                    <span class="notif-kind" th:classappend="${n.type.name().toLowerCase()}" th:switch="${n.type.name()}">
+                        <svg th:case="'LIKE'" class="i"><use href="/img/icons.svg#like"/></svg>
+                        <svg th:case="'COMMENT'" class="i"><use href="/img/icons.svg#chat"/></svg>
+                        <svg th:case="*" class="i"><use href="/img/icons.svg#user-plus"/></svg>
+                    </span>
+                </a>
+                <div class="grow">
+                    <div class="notif-text" th:switch="${n.type.name()}">
+                        <a class="name" th:href="@{/profile/{u}(u=${n.actor.username})}" th:text="${n.actor.fullName}">Ism</a>
+                        <span th:case="'FRIEND_REQUEST'">sizga do'stlik so'rovini yubordi</span>
+                        <span th:case="'FRIEND_ACCEPTED'">do'stlik so'rovingizni qabul qildi</span>
+                        <span th:case="'LIKE'">postingizga «Klass» bosdi</span>
+                        <span th:case="'COMMENT'">postingizga izoh yozdi</span>
+                    </div>
+                    <a class="notif-preview" th:if="${n.preview}" th:href="@{/posts/{id}(id=${n.postId})}" th:text="'«' + ${n.preview} + '»'">matn</a>
+                    <div class="muted small" th:text="${@fmt.ago(n.createdAt)}">vaqt</div>
+                </div>
+                <a th:if="${n.type.name() == 'FRIEND_REQUEST'}" class="btn btn-sm primary" th:href="@{/friends}">Ko'rish</a>
+                <a th:if="${n.postId != null}" class="btn btn-sm" th:href="@{/posts/{id}(id=${n.postId})}">Postga o'tish</a>
+            </div>
+        </section>
+    </main>
+</div>
+<nav th:replace="~{fragments/layout :: mobile-nav}"></nav>
+</body>
+</html>

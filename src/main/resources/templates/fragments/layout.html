@@ -20,21 +20,21 @@
 
         <nav class="topnav" th:if="${me != null}">
             <a th:href="@{/}" title="Lenta" th:classappend="${currentPath == '/'} ? 'active'">
-                <svg class="i"><use href="/img/icons.svg#home"/></svg>
-                <span class="topnav-label">Lenta</span>
-            </a>
+                <span class="ico"><svg class="i"><use href="/img/icons.svg#home"/></svg></span></a>
             <a th:href="@{/messages}" title="Xabarlar" th:classappend="${#strings.startsWith(currentPath, '/messages')} ? 'active'">
-                <span class="ico"><svg class="i"><use href="/img/icons.svg#mail"/></svg><span class="dot-badge" th:if="${unreadMessages > 0}" th:text="${unreadMessages}">1</span></span>
-                <span class="topnav-label">Xabarlar</span>
-            </a>
+                <span class="ico"><svg class="i"><use href="/img/icons.svg#mail"/></svg><span class="dot-badge" th:if="${unreadMessages > 0}" th:text="${unreadMessages}">1</span></span></a>
+            <a th:href="@{/discussions}" title="Muhokamalar" th:classappend="${currentPath == '/discussions'} ? 'active'">
+                <span class="ico"><svg class="i"><use href="/img/icons.svg#chat"/></svg></span></a>
+            <a th:href="@{/notifications}" title="Bildirishnomalar" th:classappend="${currentPath == '/notifications'} ? 'active'">
+                <span class="ico"><svg class="i"><use href="/img/icons.svg#bell"/></svg><span class="dot-badge green" th:if="${unseenNotifications > 0}" th:text="${unseenNotifications}">1</span></span></a>
+            <a th:href="@{/guests}" title="Mehmonlar" th:classappend="${currentPath == '/guests'} ? 'active'">
+                <span class="ico"><svg class="i"><use href="/img/icons.svg#footprints"/></svg><span class="dot-badge green" th:if="${unseenGuests > 0}" th:text="${unseenGuests}">1</span></span></a>
             <a th:href="@{/friends}" title="Do'stlar" th:classappend="${currentPath == '/friends'} ? 'active'">
-                <span class="ico"><svg class="i"><use href="/img/icons.svg#users"/></svg><span class="dot-badge" th:if="${pendingRequests > 0}" th:text="${pendingRequests}">1</span></span>
-                <span class="topnav-label">Do'stlar</span>
-            </a>
-            <a th:href="@{/search}" title="Odamlar" th:classappend="${currentPath == '/search'} ? 'active'">
-                <svg class="i"><use href="/img/icons.svg#user-plus"/></svg>
-                <span class="topnav-label">Odamlar</span>
-            </a>
+                <span class="ico"><svg class="i"><use href="/img/icons.svg#users"/></svg><span class="dot-badge" th:if="${pendingRequests > 0}" th:text="${pendingRequests}">1</span></span></a>
+            <a th:href="@{/video}" title="Video" th:classappend="${#strings.startsWith(currentPath, '/video')} ? 'active'">
+                <span class="ico"><svg class="i"><use href="/img/icons.svg#video"/></svg></span></a>
+            <a th:href="@{/music}" title="Musiqa" th:classappend="${currentPath == '/music'} ? 'active'">
+                <span class="ico"><svg class="i"><use href="/img/icons.svg#music"/></svg></span></a>
         </nav>
 
         <div class="topbar-right" th:if="${me != null}">
@@ -44,12 +44,12 @@
             </form>
             <details class="user-menu">
                 <summary>
-                    <span class="avatar avatar-32" th:style="'background:' + ${me.avatarColor}" th:text="${me.initial}">A</span>
+                    <span class="avatar avatar-32" th:style="${me.avatarStyle}" th:text="${me.avatarLetter}">A</span>
                     <svg class="i i-sm"><use href="/img/icons.svg#chevron-down"/></svg>
                 </summary>
                 <div class="dropdown">
                     <a class="dropdown-head" th:href="@{/profile/{u}(u=${me.username})}">
-                        <span class="avatar avatar-40" th:style="'background:' + ${me.avatarColor}" th:text="${me.initial}">A</span>
+                        <span class="avatar avatar-40" th:style="${me.avatarStyle}" th:text="${me.avatarLetter}">A</span>
                         <span><b th:text="${me.fullName}">Ism</b><br><small class="muted">Mening sahifam</small></span>
                     </a>
                     <a th:href="@{/settings}"><svg class="i"><use href="/img/icons.svg#settings"/></svg> Sozlamalar</a>
@@ -60,19 +60,22 @@
             </details>
         </div>
     </div>
+    <div class="toast error" th:if="${error}" th:text="${error}" data-toast>Xato</div>
+    <div class="toast ok" th:if="${success}" th:text="${success}" data-toast>Tayyor</div>
 </header>
 
 <!-- ========== Chap ustun ========== -->
 <aside th:fragment="sidebar" class="left-col">
-    <a class="big-avatar" th:unless="${hideSidebarAvatar}" th:href="@{/profile/{u}(u=${me.username})}"
-       th:style="'background:' + ${me.avatarColor}">
-        <span th:text="${me.initial}">A</span>
-        <span class="camera-badge" title="Profilni tahrirlash"><svg class="i"><use href="/img/icons.svg#camera"/></svg></span>
-    </a>
+    <div class="big-avatar-wrap" th:unless="${hideSidebarAvatar}">
+        <a class="big-avatar" th:href="@{/profile/{u}(u=${me.username})}" th:style="${me.avatarStyle}">
+            <span th:text="${me.avatarLetter}">A</span>
+        </a>
+        <a class="camera-badge" th:href="@{/photos}" title="Profil rasmini o'zgartirish"><svg class="i"><use href="/img/icons.svg#camera"/></svg></a>
+    </div>
     <a class="publish-btn" href="/#composer">
         <svg class="i"><use href="/img/icons.svg#plus-circle"/></svg> Nashr qilish
     </a>
-    <nav class="side-menu">
+    <nav class="side-menu" th:fragment="menu-links">
         <a th:href="@{/profile/{u}(u=${me.username})}"
            th:classappend="${currentPath == '/profile/' + me.username} ? 'active'">
             <svg class="i"><use href="/img/icons.svg#user"/></svg><span th:text="${me.fullName}">Ism</span></a>
@@ -81,9 +84,23 @@
         <a th:href="@{/friends}" th:classappend="${currentPath == '/friends'} ? 'active'">
             <svg class="i"><use href="/img/icons.svg#users"/></svg><span>Do'stlar</span>
             <span class="count" th:if="${pendingRequests > 0}" th:text="'+' + ${pendingRequests}">+1</span></a>
+        <a th:href="@{/photos}" th:classappend="${currentPath == '/photos'} ? 'active'">
+            <svg class="i"><use href="/img/icons.svg#image"/></svg><span>Fotolar</span></a>
         <a th:href="@{/messages}" th:classappend="${#strings.startsWith(currentPath, '/messages')} ? 'active'">
             <svg class="i"><use href="/img/icons.svg#mail"/></svg><span>Xabarlar</span>
             <span class="count" th:if="${unreadMessages > 0}" th:text="${unreadMessages}">1</span></a>
+        <a th:href="@{/discussions}" th:classappend="${currentPath == '/discussions'} ? 'active'">
+            <svg class="i"><use href="/img/icons.svg#chat"/></svg><span>Muhokamalar</span></a>
+        <a th:href="@{/notifications}" th:classappend="${currentPath == '/notifications'} ? 'active'">
+            <svg class="i"><use href="/img/icons.svg#bell"/></svg><span>Bildirishnomalar</span>
+            <span class="count" th:if="${unseenNotifications > 0}" th:text="${unseenNotifications}">1</span></a>
+        <a th:href="@{/guests}" th:classappend="${currentPath == '/guests'} ? 'active'">
+            <svg class="i"><use href="/img/icons.svg#footprints"/></svg><span>Mehmonlar</span>
+            <span class="count" th:if="${unseenGuests > 0}" th:text="'+' + ${unseenGuests}">+1</span></a>
+        <a th:href="@{/music}" th:classappend="${currentPath == '/music'} ? 'active'">
+            <svg class="i"><use href="/img/icons.svg#music"/></svg><span>Musiqa</span></a>
+        <a th:href="@{/video}" th:classappend="${#strings.startsWith(currentPath, '/video')} ? 'active'">
+            <svg class="i"><use href="/img/icons.svg#video"/></svg><span>Video</span></a>
         <a th:href="@{/search}" th:classappend="${currentPath == '/search'} ? 'active'">
             <svg class="i"><use href="/img/icons.svg#search"/></svg><span>Odamlarni topish</span></a>
         <a th:href="@{/settings}" th:classappend="${currentPath == '/settings'} ? 'active'">
@@ -105,15 +122,17 @@
     <a th:href="@{/messages}" th:classappend="${#strings.startsWith(currentPath, '/messages')} ? 'active'">
         <svg class="i"><use href="/img/icons.svg#mail"/></svg><span>Xabarlar</span>
         <b class="dot-badge" th:if="${unreadMessages > 0}" th:text="${unreadMessages}">1</b></a>
-    <a th:href="@{/search}" th:classappend="${currentPath == '/search'} ? 'active'">
-        <svg class="i"><use href="/img/icons.svg#search"/></svg><span>Qidiruv</span></a>
-    <a th:href="@{/profile/{u}(u=${me.username})}" th:classappend="${currentPath == '/profile/' + me.username} ? 'active'">
-        <svg class="i"><use href="/img/icons.svg#user"/></svg><span>Profil</span></a>
+    <a th:href="@{/notifications}" th:classappend="${currentPath == '/notifications'} ? 'active'">
+        <svg class="i"><use href="/img/icons.svg#bell"/></svg><span>Bildirish</span>
+        <b class="dot-badge green" th:if="${unseenNotifications > 0}" th:text="${unseenNotifications}">1</b></a>
+    <a th:href="@{/menu}" th:classappend="${currentPath == '/menu'} ? 'active'">
+        <svg class="i"><use href="/img/icons.svg#grid"/></svg><span>Menyu</span>
+        <b class="dot-badge green" th:if="${unseenGuests > 0}" th:text="${unseenGuests}">1</b></a>
 </nav>
 
 <!-- ========== Kichik foydalanuvchi kartasi ========== -->
 <a th:fragment="person-link(u)" class="person-link" th:href="@{/profile/{n}(n=${u.username})}">
-    <span class="avatar avatar-40" th:style="'background:' + ${u.avatarColor}" th:text="${u.initial}">A</span>
+    <span class="avatar avatar-40" th:style="${u.avatarStyle}" th:text="${u.avatarLetter}">A</span>
     <span class="person-text">
         <span class="name" th:text="${u.fullName}">Ism</span>
         <span class="muted small" th:text="${u.city ?: '@' + u.username}">Shahar</span>

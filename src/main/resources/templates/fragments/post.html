@@ -4,7 +4,7 @@
 <article th:fragment="post(p)" class="card post" th:id="'post-' + ${p.id}">
     <header class="post-head">
         <a th:href="@{/profile/{u}(u=${p.author.username})}">
-            <span class="avatar avatar-40" th:style="'background:' + ${p.author.avatarColor}" th:text="${p.author.initial}">A</span>
+            <span class="avatar avatar-40" th:style="${p.author.avatarStyle}" th:text="${p.author.avatarLetter}">A</span>
         </a>
         <div class="grow">
             <a class="name" th:href="@{/profile/{u}(u=${p.author.username})}" th:text="${p.author.fullName}">Ism</a>
@@ -21,7 +21,10 @@
         </details>
     </header>
 
-    <p class="post-body" th:text="${p.content}">Matn</p>
+    <p class="post-body" th:if="${!#strings.isEmpty(p.content)}" th:text="${p.content}">Matn</p>
+    <a class="post-image" th:if="${p.imageUrl}" th:href="${p.imageUrl}" target="_blank">
+        <img th:src="${p.imageUrl}" alt="" loading="lazy">
+    </a>
 
     <div class="post-stats" th:if="${!p.likedBy.isEmpty()}">
         <span class="like-bubble"><svg class="i"><use href="/img/icons.svg#like"/></svg></span>
@@ -43,7 +46,7 @@
     <section class="comments" th:id="'comments-' + ${p.id}" th:classappend="${!p.comments.isEmpty()} ? 'open'">
         <div class="comment" th:each="c : ${p.comments}">
             <a th:href="@{/profile/{u}(u=${c.author.username})}">
-                <span class="avatar avatar-32" th:style="'background:' + ${c.author.avatarColor}" th:text="${c.author.initial}">A</span>
+                <span class="avatar avatar-32" th:style="${c.author.avatarStyle}" th:text="${c.author.avatarLetter}">A</span>
             </a>
             <div class="comment-body">
                 <a class="name" th:href="@{/profile/{u}(u=${c.author.username})}" th:text="${c.author.fullName}">Ism</a>
@@ -58,7 +61,7 @@
             </div>
         </div>
         <form class="comment-form" th:action="@{/posts/{id}/comments(id=${p.id})}" method="post">
-            <span class="avatar avatar-32" th:style="'background:' + ${me.avatarColor}" th:text="${me.initial}">A</span>
+            <span class="avatar avatar-32" th:style="${me.avatarStyle}" th:text="${me.avatarLetter}">A</span>
             <input type="text" name="content" maxlength="1000" placeholder="Izoh yozing..." required autocomplete="off">
             <button type="submit" class="icon-btn accent" title="Yuborish"><svg class="i"><use href="/img/icons.svg#send"/></svg></button>
         </form>

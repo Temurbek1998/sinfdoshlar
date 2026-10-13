@@ -9,8 +9,15 @@
     <main class="main-col profile-page">
         <!-- ===== Profil sarlavhasi ===== -->
         <section class="profile-head">
-            <div class="hero-photo" th:style="'background:' + ${user.avatarColor}">
-                <span th:text="${user.initial}">A</span>
+            <div class="hero-photo" th:style="${user.avatarStyle}">
+                <span th:text="${user.avatarLetter}">A</span>
+                <form th:if="${relation == 'SELF'}" class="hero-upload" th:action="@{/photos}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="avatar" value="true">
+                    <label title="Profil rasmini o'zgartirish">
+                        <input type="file" name="file" accept="image/jpeg,image/png,image/gif" data-max-mb="5" data-autosubmit hidden>
+                        <svg class="i"><use href="/img/icons.svg#camera"/></svg>
+                    </label>
+                </form>
                 <div class="photo-stats">
                     <span title="Postlar"><svg class="i"><use href="/img/icons.svg#chat"/></svg><b th:text="${postsCount}">0</b></span>
                     <span title="Olingan klasslar"><svg class="i"><use href="/img/icons.svg#like"/></svg><b th:text="${likesReceived}">0</b></span>
@@ -64,6 +71,10 @@
                 <a th:href="@{/profile/{u}(u=${user.username})}" th:classappend="${tab == 'feed'} ? 'active'">Lenta</a>
                 <a th:href="@{/profile/{u}(u=${user.username},tab='friends')}" th:classappend="${tab == 'friends'} ? 'active'">
                     Do'stlar <span th:text="${friends.size()}">0</span></a>
+                <a th:href="@{/profile/{u}(u=${user.username},tab='photos')}" th:classappend="${tab == 'photos'} ? 'active'">
+                    Fotolar <span th:text="${photos.size()}">0</span></a>
+                <a th:href="@{/profile/{u}(u=${user.username},tab='videos')}" th:classappend="${tab == 'videos'} ? 'active'">
+                    Video <span th:text="${videos.size()}">0</span></a>
                 <a th:href="@{/profile/{u}(u=${user.username},tab='about')}" th:classappend="${tab == 'about'} ? 'active'">O'zi haqida</a>
             </nav>
         </section>
@@ -72,13 +83,7 @@
         <div class="profile-content">
             <div class="profile-main-col">
                 <th:block th:if="${tab == 'feed'}">
-                    <form th:if="${relation == 'SELF'}" id="composer" class="card composer" th:action="@{/posts}" method="post">
-                        <span class="avatar avatar-40" th:style="'background:' + ${me.avatarColor}" th:text="${me.initial}">A</span>
-                        <div class="grow">
-                            <textarea name="content" rows="2" maxlength="2000" required data-autogrow placeholder="Nima yangiliklar?"></textarea>
-                            <div class="composer-foot"><button type="submit" class="btn primary">Nashr qilish</button></div>
-                        </div>
-                    </form>
+                    <th:block th:if="${relation == 'SELF'}"><form th:replace="~{fragments/composer :: composer('Nima yangiliklar?')}"></form></th:block>
                     <div th:if="${posts.isEmpty()}" class="card empty">
                         <svg class="i i-xl"><use href="/img/icons.svg#chat"/></svg>
                         <p class="muted" th:text="${relation == 'SELF'} ? 'Siz hali hech narsa yozmadingiz.' : ${user.fullName} + ' hali hech narsa yozmagan.'">Postlar yo'q</p>
@@ -93,10 +98,31 @@
                     <p th:if="${friends.isEmpty()}" class="muted">Hozircha do'stlar yo'q.</p>
                     <div class="friend-cards">
                         <a class="friend-card" th:each="f : ${friends}" th:href="@{/profile/{u}(u=${f.username})}">
-                            <span class="avatar avatar-96" th:style="'background:' + ${f.avatarColor}" th:text="${f.initial}">A</span>
+                            <span class="avatar avatar-96" th:style="${f.avatarStyle}" th:text="${f.avatarLetter}">A</span>
                             <span class="name" th:text="${f.fullName}">Ism</span>
                             <span class="muted small" th:text="${f.city ?: ' '}">Shahar</span>
                         </a>
+                    </div>
+                </section>
+
+                <section class="card" th:if="${tab == 'photos'}">
+                    <div class="card-title-row">
+                        <h2 class="card-title">Fotolar <span class="muted" th:text="${photos.size()}">0</span></h2>
+                        <a th:if="${relation == 'SELF'}" class="btn primary btn-sm" th:href="@{/photos}"><svg class="i i-sm"><use href="/img/icons.svg#upload"/></svg> Yuklash</a>
+                    </div>
+                    <p th:if="${photos.isEmpty()}" class="muted">Hozircha rasmlar yo'q.</p>
+                    <div class="photo-grid">
+                        <a th:each="ph : ${photos}" th:href="${ph.url}" target="_blank" class="photo-tile">
+                            <img th:src="${ph.url}" loading="lazy" th:alt="${ph.caption}">
+                        </a>
+                    </div>
+                </section>
+
+                <section class="card" th:if="${tab == 'videos'}">
+                    <h2 class="card-title">Video <span class="muted" th:text="${videos.size()}">0</span></h2>
+                    <p th:if="${videos.isEmpty()}" class="muted">Hozircha videolar yo'q.</p>
+                    <div class="video-grid">
+                        <th:block th:each="v : ${videos}"><a th:replace="~{fragments/media :: video-card(${v})}"></a></th:block>
                     </div>
                 </section>
 
@@ -149,7 +175,7 @@
                     </div>
                     <div class="mini-grid">
                         <a th:each="f, st : ${friends}" th:if="${st.index < 6}" th:href="@{/profile/{u}(u=${f.username})}" class="mini-friend">
-                            <span class="avatar avatar-56" th:style="'background:' + ${f.avatarColor}" th:text="${f.initial}">A</span>
+                            <span class="avatar avatar-56" th:style="${f.avatarStyle}" th:text="${f.avatarLetter}">A</span>
                             <span th:text="${#strings.substringBefore(f.fullName + ' ', ' ')}">Ism</span>
                         </a>
                     </div>

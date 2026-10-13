@@ -20,10 +20,13 @@ public class Post {
     private User author;
 
     @Column(nullable = false, length = 2000)
-    private String content;
+    private String content = "";
 
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    /** Postga biriktirilgan rasm (ixtiyoriy). */
+    private Long imageMediaId;
 
     /** "Klass!" bosgan foydalanuvchilar. */
     @ManyToMany
@@ -47,6 +50,10 @@ public class Post {
     public boolean isLikedBy(User user) {
         return likedBy.contains(user);
     }
+
+    public Long getImageMediaId() { return imageMediaId; }
+    public void setImageMediaId(Long imageMediaId) { this.imageMediaId = imageMediaId; }
+    public String getImageUrl() { return imageMediaId == null ? null : "/media/" + imageMediaId; }
 
     public Long getId() { return id; }
     public User getAuthor() { return author; }

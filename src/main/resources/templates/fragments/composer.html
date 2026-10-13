@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<form th:fragment="composer(placeholder)" id="composer" class="card composer" th:action="@{/posts}" method="post"
+      enctype="multipart/form-data">
+    <span class="avatar avatar-40" th:style="${me.avatarStyle}" th:text="${me.avatarLetter}">A</span>
+    <div class="grow">
+        <textarea name="content" rows="2" maxlength="2000" data-autogrow th:placeholder="${placeholder}"></textarea>
+        <div class="composer-preview" hidden><img alt=""><button type="button" class="icon-btn" data-clear-image title="Olib tashlash">
+            <svg class="i i-sm"><use href="/img/icons.svg#x"/></svg></button></div>
+        <div class="composer-foot">
+            <label class="attach" title="Rasm qo'shish">
+                <input type="file" name="image" accept="image/jpeg,image/png,image/gif" data-max-mb="5" data-image-input hidden>
+                <svg class="i"><use href="/img/icons.svg#image"/></svg> Rasm
+            </label>
+            <button type="submit" class="btn primary">Nashr qilish</button>
+        </div>
+    </div>
+</form>
+</body>
+</html>

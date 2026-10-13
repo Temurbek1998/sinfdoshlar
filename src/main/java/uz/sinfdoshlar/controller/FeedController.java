@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import uz.sinfdoshlar.model.User;
 import uz.sinfdoshlar.service.FriendService;
 import uz.sinfdoshlar.service.PostService;
+import uz.sinfdoshlar.service.UploadException;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uz.sinfdoshlar.service.UserService;
 
 @Controller
@@ -35,9 +38,21 @@ public class FeedController {
     }
 
     @PostMapping("/posts")
-    public String create(@RequestParam String content, HttpServletRequest request) {
-        postService.create(userService.currentUser(), content);
+    public String create(@RequestParam(defaultValue = "") String content,
+                         @RequestParam(required = false) MultipartFile image,
+                         HttpServletRequest request, RedirectAttributes redirect) {
+        try {
+            postService.create(userService.currentUser(), content, image);
+        } catch (UploadException e) {
+            redirect.addFlashAttribute("error", e.getMessage());
+        }
         return backTo(request);
+    }
+
+    @GetMapping("/posts/{id}")
+    public String show(@PathVariable Long id, Model model) {
+        model.addAttribute("post", postService.get(id));
+        return "post";
     }
 
     @PostMapping("/posts/{id}/like")

@@ -36,6 +36,17 @@ public class User {
 
     private LocalDateTime lastSeenAt;
 
+    /** Profil rasmi (media_files jadvalidagi id) — bo'lmasa rangli doira. */
+    private Long avatarMediaId;
+
+    /** "Mening musiqam" ro'yxati. */
+    @ManyToMany
+    @JoinTable(name = "user_tracks",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "track_id"))
+    @OrderBy("createdAt desc")
+    private java.util.Set<Track> savedTracks = new java.util.LinkedHashSet<>();
+
     /** Avatar doirasida ko'rsatiladigan bosh harf. */
     public String getInitial() {
         return fullName == null || fullName.isBlank() ? "?" : fullName.substring(0, 1).toUpperCase();
@@ -47,6 +58,26 @@ public class User {
         int hue = hues[(int) ((id == null ? 0 : id) % hues.length)];
         return "hsl(" + hue + ", 65%, 55%)";
     }
+
+    public String getAvatarUrl() {
+        return avatarMediaId == null ? null : "/media/" + avatarMediaId;
+    }
+
+    /** Avatar elementining style atributi: rasm bo'lsa — rasm, bo'lmasa — rang. */
+    public String getAvatarStyle() {
+        return avatarMediaId == null
+                ? "background:" + getAvatarColor()
+                : "background:" + getAvatarColor() + " url(/media/" + avatarMediaId + ") center/cover no-repeat";
+    }
+
+    /** Rasm bo'lsa harf ko'rsatilmaydi. */
+    public String getAvatarLetter() {
+        return avatarMediaId == null ? getInitial() : "";
+    }
+
+    public Long getAvatarMediaId() { return avatarMediaId; }
+    public void setAvatarMediaId(Long avatarMediaId) { this.avatarMediaId = avatarMediaId; }
+    public java.util.Set<Track> getSavedTracks() { return savedTracks; }
 
     public Integer getAge() {
         return birthDate == null ? null : java.time.Period.between(birthDate, LocalDate.now()).getYears();

@@ -15,7 +15,7 @@
             <a class="conv-row" th:each="c : ${conversations}"
                th:classappend="${c.unread > 0} ? 'unread'"
                th:href="@{/messages/{u}(u=${c.partner.username})}">
-                <span class="avatar avatar-48" th:style="'background:' + ${c.partner.avatarColor}" th:text="${c.partner.initial}">A</span>
+                <span class="avatar avatar-48" th:style="${c.partner.avatarStyle}" th:text="${c.partner.avatarLetter}">A</span>
                 <div class="grow">
                     <div class="conv-top">
                         <span class="name" th:text="${c.partner.fullName}">Ism</span>

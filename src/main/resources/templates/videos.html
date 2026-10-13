@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Video')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<div class="page two">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main class="main-col">
+        <section class="card video-head">
+            <nav class="pill-tabs">
+                <a th:href="@{/video}" th:classappend="${tab == 'all'} ? 'active'">Barcha videolar</a>
+                <a th:href="@{/video(tab='mine')}" th:classappend="${tab == 'mine'} ? 'active'">Mening videolarim</a>
+            </nav>
+            <form class="add-video" th:action="@{/video}" method="post">
+                <div class="field-icon"><svg class="i i-sm"><use href="/img/icons.svg#link"/></svg>
+                    <input class="field" type="url" name="url" required placeholder="YouTube havolasi: https://youtu.be/..."></div>
+                <input class="field" type="text" name="title" maxlength="200" placeholder="Video nomi">
+                <button class="btn primary"><svg class="i i-sm"><use href="/img/icons.svg#plus"/></svg> Qo'shish</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <div th:if="${videos.isEmpty()}" class="empty">
+                <svg class="i i-xl"><use href="/img/icons.svg#video"/></svg>
+                <p class="muted">Hali videolar yo'q. YouTube havolasini qo'shib, birinchi videoni joylang.</p>
+            </div>
+            <div class="video-grid">
+                <th:block th:each="v : ${videos}"><a th:replace="~{fragments/media :: video-card(${v})}"></a></th:block>
+            </div>
+        </section>
+    </main>
+</div>
+<nav th:replace="~{fragments/layout :: mobile-nav}"></nav>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Mehmonlar')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<div class="page two">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main class="main-col">
+        <section class="card">
+            <h2 class="card-title">Mehmonlar</h2>
+            <div th:if="${visits.isEmpty()}" class="empty">
+                <svg class="i i-xl"><use href="/img/icons.svg#footprints"/></svg>
+                <p><b>Bir-biringizga mehmonga boring!</b></p>
+                <p class="muted">Do'stlaringiz sahifasiga kiring. Sizning sahifangizga kirganlar shu yerda ko'rinadi.</p>
+                <a class="btn primary" th:href="@{/search}">Odamlarni topish</a>
+            </div>
+            <div class="guest-grid">
+                <a class="guest" th:each="v : ${visits}" th:classappend="${!v.seen} ? 'new'" th:href="@{/profile/{u}(u=${v.visitor.username})}">
+                    <span class="avatar avatar-96" th:style="${v.visitor.avatarStyle}" th:text="${v.visitor.avatarLetter}">A</span>
+                    <span class="name" th:text="${v.visitor.fullName}">Ism</span>
+                    <span class="muted small" th:text="${@fmt.ago(v.visitedAt)}">vaqt</span>
+                </a>
+            </div>
+        </section>
+    </main>
+</div>
+<nav th:replace="~{fragments/layout :: mobile-nav}"></nav>
+</body>
+</html>

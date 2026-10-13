@@ -7,16 +7,7 @@
     <aside th:replace="~{fragments/layout :: sidebar}"></aside>
 
     <main class="main-col">
-        <form id="composer" class="card composer" th:action="@{/posts}" method="post">
-            <span class="avatar avatar-40" th:style="'background:' + ${me.avatarColor}" th:text="${me.initial}">A</span>
-            <div class="grow">
-                <textarea name="content" rows="2" maxlength="2000" required data-autogrow
-                          th:placeholder="'Nima yangiliklar, ' + ${#strings.substringBefore(me.fullName + ' ', ' ')} + '?'"></textarea>
-                <div class="composer-foot">
-                    <button type="submit" class="btn primary">Nashr qilish</button>
-                </div>
-            </div>
-        </form>
+        <form th:replace="~{fragments/composer :: composer(${'Nima yangiliklar, ' + #strings.substringBefore(me.fullName + ' ', ' ') + '?'})}"></form>
 
         <div th:if="${posts.isEmpty()}" class="card empty">
             <svg class="i i-xl"><use href="/img/icons.svg#users"/></svg>
@@ -51,7 +42,7 @@
             <p th:if="${myFriends.isEmpty()}" class="muted small">Hozircha do'stlaringiz yo'q.</p>
             <div class="mini-grid">
                 <a th:each="f, st : ${myFriends}" th:if="${st.index < 6}" th:href="@{/profile/{n}(n=${f.username})}" class="mini-friend">
-                    <span class="avatar avatar-56" th:style="'background:' + ${f.avatarColor}" th:text="${f.initial}">A</span>
+                    <span class="avatar avatar-56" th:style="${f.avatarStyle}" th:text="${f.avatarLetter}">A</span>
                     <span th:text="${#strings.substringBefore(f.fullName + ' ', ' ')}">Ism</span>
                 </a>
             </div>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Muhokamalar')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<div class="page two">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main class="main-col narrow-col">
+        <section class="card">
+            <h2 class="card-title">Muhokamalar</h2>
+            <p class="muted small" style="margin:-6px 0 0">Siz yozgan yoki izoh qoldirgan postlar, eng yangi izoh tepada.</p>
+        </section>
+        <div th:if="${posts.isEmpty()}" class="card empty">
+            <svg class="i i-xl"><use href="/img/icons.svg#chat"/></svg>
+            <p><b>Istalgan narsani muhokama qiling!</b></p>
+            <p class="muted">Do'stlaringiz postlariga izoh yozing, suhbatlar shu yerda yig'iladi.</p>
+            <a class="btn primary" th:href="@{/}">Lentaga o'tish</a>
+        </div>
+        <th:block th:each="p : ${posts}">
+            <article th:replace="~{fragments/post :: post(${p})}"></article>
+        </th:block>
+    </main>
+</div>
+<nav th:replace="~{fragments/layout :: mobile-nav}"></nav>
+</body>
+</html>

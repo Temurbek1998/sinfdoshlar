@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.sinfdoshlar.model.Friendship;
 import uz.sinfdoshlar.model.FriendshipStatus;
+import uz.sinfdoshlar.model.NotificationType;
 import uz.sinfdoshlar.model.User;
 import uz.sinfdoshlar.repository.FriendshipRepository;
 
@@ -17,9 +18,11 @@ public class FriendService {
     public enum Relation { SELF, NONE, FRIENDS, REQUEST_SENT, REQUEST_RECEIVED }
 
     private final FriendshipRepository friendships;
+    private final NotificationService notifications;
 
-    public FriendService(FriendshipRepository friendships) {
+    public FriendService(FriendshipRepository friendships, NotificationService notifications) {
         this.friendships = friendships;
+        this.notifications = notifications;
     }
 
     public List<User> friendsOf(User user) {
@@ -57,10 +60,12 @@ public class FriendService {
         var existing = friendships.findBetween(me, other);
         if (existing.isEmpty()) {
             friendships.save(new Friendship(me, other));
+            notifications.notify(other, me, NotificationType.FRIEND_REQUEST, null, null);
         } else if (existing.get().getStatus() == FriendshipStatus.PENDING
                 && existing.get().getAddressee().equals(me)) {
             // U menga allaqachon so'rov yuborgan bo'lsa, shunchaki qabul qilamiz.
             existing.get().setStatus(FriendshipStatus.ACCEPTED);
+            notifications.notify(other, me, NotificationType.FRIEND_ACCEPTED, null, null);
         }
     }
 
@@ -68,7 +73,10 @@ public class FriendService {
     public void accept(User me, User other) {
         friendships.findBetween(me, other)
                 .filter(f -> f.getAddressee().equals(me) && f.getStatus() == FriendshipStatus.PENDING)
-                .ifPresent(f -> f.setStatus(FriendshipStatus.ACCEPTED));
+                .ifPresent(f -> {
+                    f.setStatus(FriendshipStatus.ACCEPTED);
+                    notifications.notify(other, me, NotificationType.FRIEND_ACCEPTED, null, null);
+                });
     }
 
     /** So'rovni rad etish, bekor qilish yoki do'stlikdan chiqarish. */

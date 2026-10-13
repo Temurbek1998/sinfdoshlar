@@ -10,11 +10,13 @@ import uz.sinfdoshlar.model.FriendshipStatus;
 import uz.sinfdoshlar.model.Message;
 import uz.sinfdoshlar.model.Post;
 import uz.sinfdoshlar.model.User;
+import uz.sinfdoshlar.model.Video;
 import uz.sinfdoshlar.repository.CommentRepository;
 import uz.sinfdoshlar.repository.FriendshipRepository;
 import uz.sinfdoshlar.repository.MessageRepository;
 import uz.sinfdoshlar.repository.PostRepository;
 import uz.sinfdoshlar.repository.UserRepository;
+import uz.sinfdoshlar.repository.VideoRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
@@ -29,22 +31,38 @@ public class DemoDataLoader implements CommandLineRunner {
     private final PostRepository posts;
     private final MessageRepository messages;
     private final CommentRepository comments;
+    private final VideoRepository videos;
     private final PasswordEncoder encoder;
 
     public DemoDataLoader(UserRepository users, FriendshipRepository friendships, PostRepository posts,
-                          MessageRepository messages, CommentRepository comments, PasswordEncoder encoder) {
+                          MessageRepository messages, CommentRepository comments, VideoRepository videos,
+                          PasswordEncoder encoder) {
         this.users = users;
         this.friendships = friendships;
         this.posts = posts;
         this.messages = messages;
         this.comments = comments;
+        this.videos = videos;
         this.encoder = encoder;
     }
 
     @Override
     @Transactional
     public void run(String... args) {
-        if (users.count() > 0) return;
+        if (users.count() == 0) createUsers();
+        if (videos.count() == 0) createVideos();
+    }
+
+    /** Video bo'limi bo'sh ko'rinmasligi uchun bir nechta ochiq YouTube videolari. */
+    private void createVideos() {
+        User owner = users.findByUsername("dilnoza").orElse(null);
+        if (owner == null) return;
+        videos.save(new Video(owner, "LXb3EKWsInQ", "Kosta-Rika tabiati 4K"));
+        videos.save(new Video(owner, "aqz-KE-bpKQ", "Big Buck Bunny — multfilm"));
+        users.findByUsername("jasur").ifPresent(j -> videos.save(new Video(j, "jNQXAC9IVRw", "YouTube'dagi birinchi video")));
+    }
+
+    private void createUsers() {
 
         User ali = user("ali", "Ali Valiyev", "Toshkent", LocalDate.of(1998, 3, 14));
         User dilnoza = user("dilnoza", "Dilnoza Karimova", "Samarqand", LocalDate.of(1999, 7, 2));

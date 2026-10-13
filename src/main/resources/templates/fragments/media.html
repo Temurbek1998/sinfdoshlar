@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<a th:fragment="video-card(v)" class="video-card" th:href="@{/video/{id}(id=${v.id})}">
+    <span class="video-thumb">
+        <img th:src="${v.thumbnail}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+        <span class="play-badge"><svg class="i"><use href="/img/icons.svg#play"/></svg></span>
+    </span>
+    <span class="video-title" th:text="${v.title}">Nomi</span>
+    <span class="muted small"><span th:text="${v.owner.fullName}">Ism</span> · <span th:text="${@fmt.ago(v.createdAt)}">vaqt</span></span>
+</a>
+</body>
+</html>

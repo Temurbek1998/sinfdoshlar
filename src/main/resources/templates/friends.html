@@ -26,7 +26,7 @@
             <div class="friend-cards">
                 <div class="friend-card" th:each="f : ${friends}">
                     <a th:href="@{/profile/{u}(u=${f.username})}">
-                        <span class="avatar avatar-96" th:style="'background:' + ${f.avatarColor}" th:text="${f.initial}">A</span>
+                        <span class="avatar avatar-96" th:style="${f.avatarStyle}" th:text="${f.avatarLetter}">A</span>
                     </a>
                     <a class="name" th:href="@{/profile/{u}(u=${f.username})}" th:text="${f.fullName}">Ism</a>
                     <span class="muted small" th:text="${f.city ?: ' '}">Shahar</span>

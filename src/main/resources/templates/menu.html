@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Menyu')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<div class="page solo">
+    <main class="main-col">
+        <a class="card menu-profile" th:href="@{/profile/{u}(u=${me.username})}">
+            <span class="avatar avatar-56" th:style="${me.avatarStyle}" th:text="${me.avatarLetter}">A</span>
+            <span><b th:text="${me.fullName}">Ism</b><br><span class="muted small">Mening sahifam</span></span>
+        </a>
+        <section class="card menu-card">
+            <nav th:replace="~{fragments/layout :: menu-links}"></nav>
+            <div class="side-sep"></div>
+            <form th:action="@{/logout}" method="post" class="side-menu">
+                <button type="submit"><svg class="i"><use href="/img/icons.svg#logout"/></svg><span>Chiqish</span></button>
+            </form>
+        </section>
+    </main>
+</div>
+<nav th:replace="~{fragments/layout :: mobile-nav}"></nav>
+</body>
+</html>

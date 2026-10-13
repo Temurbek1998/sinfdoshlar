@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${video.title})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<div class="page two">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main class="main-col">
+        <section class="card video-watch">
+            <div class="video-frame">
+                <iframe th:src="${video.embedUrl}" title="Video" allowfullscreen
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+            </div>
+            <div class="video-meta">
+                <h1 th:text="${video.title}">Nomi</h1>
+                <div class="video-meta-row">
+                    <a th:replace="~{fragments/layout :: person-link(${video.owner})}"></a>
+                    <span class="muted small" th:text="${@fmt.ago(video.createdAt)}">vaqt</span>
+                    <form th:if="${video.owner == me}" th:action="@{/video/{id}/delete(id=${video.id})}" method="post"
+                          onsubmit="return confirm('Videoni o\'chirasizmi?')">
+                        <button class="btn btn-sm"><svg class="i i-sm"><use href="/img/icons.svg#trash"/></svg> O'chirish</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <section class="card" th:unless="${more.isEmpty()}">
+            <h2 class="card-title">Boshqa videolar</h2>
+            <div class="video-grid">
+                <th:block th:each="v : ${more}"><a th:replace="~{fragments/media :: video-card(${v})}"></a></th:block>
+            </div>
+        </section>
+    </main>
+</div>
+<nav th:replace="~{fragments/layout :: mobile-nav}"></nav>
+</body>
+</html>

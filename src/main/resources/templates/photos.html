@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Fotolar')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<div class="page two">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main class="main-col">
+        <section class="card">
+            <h2 class="card-title">Fotolar</h2>
+            <form class="upload-box" th:action="@{/photos}" method="post" enctype="multipart/form-data">
+                <label class="drop">
+                    <input type="file" name="file" accept="image/jpeg,image/png,image/gif" required data-max-mb="5" data-image-input>
+                    <svg class="i i-xl"><use href="/img/icons.svg#image"/></svg>
+                    <span class="drop-text"><b>Rasm tanlang</b><br><span class="muted small">JPG, PNG yoki GIF, 5 MB gacha</span></span>
+                    <img class="drop-preview" alt="" hidden>
+                </label>
+                <div class="upload-fields">
+                    <input class="field" type="text" name="caption" maxlength="500" placeholder="Izoh (ixtiyoriy)">
+                    <label class="check"><input type="checkbox" name="avatar" value="true"> Profil rasmi qilib qo'yish</label>
+                    <button class="btn primary"><svg class="i i-sm"><use href="/img/icons.svg#upload"/></svg> Yuklash</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="card">
+            <div class="card-title-row">
+                <h2 class="card-title">Mening rasmlarim <span class="muted" th:text="${photos.size()}">0</span></h2>
+                <form th:if="${me.avatarMediaId != null}" th:action="@{/photos/avatar/remove}" method="post">
+                    <button class="btn btn-sm">Profil rasmini olib tashlash</button></form>
+            </div>
+            <p th:if="${photos.isEmpty()}" class="muted">Hali rasm yuklamadingiz.</p>
+            <div class="photo-grid">
+                <div class="photo-tile" th:each="ph : ${photos}">
+                    <a th:href="${ph.url}" target="_blank"><img th:src="${ph.url}" loading="lazy" th:alt="${ph.caption}"></a>
+                    <span class="photo-badge" th:if="${ph.mediaId == me.avatarMediaId}">Profil rasmi</span>
+                    <div class="photo-actions">
+                        <form th:unless="${ph.mediaId == me.avatarMediaId}" th:action="@{/photos/{id}/avatar(id=${ph.id})}" method="post">
+                            <button class="icon-btn light" title="Profil rasmi qilish"><svg class="i i-sm"><use href="/img/icons.svg#user"/></svg></button></form>
+                        <form th:action="@{/photos/{id}/delete(id=${ph.id})}" method="post" onsubmit="return confirm('Rasmni o\'chirasizmi?')">
+                            <button class="icon-btn light" title="O'chirish"><svg class="i i-sm"><use href="/img/icons.svg#trash"/></svg></button></form>
+                    </div>
+                    <div class="photo-caption" th:if="${ph.caption}" th:text="${ph.caption}">Izoh</div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+<nav th:replace="~{fragments/layout :: mobile-nav}"></nav>
+</body>
+</html>
