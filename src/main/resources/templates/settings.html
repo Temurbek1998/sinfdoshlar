@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Sozlamalar')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<div class="page two">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main class="main-col">
+        <section class="card narrow">
+            <h2 class="card-title">Shaxsiy ma'lumotlar</h2>
+            <form th:action="@{/settings}" th:object="${form}" method="post" class="form">
+                <label>Ism va familiya
+                    <input type="text" th:field="*{fullName}" required>
+                    <span class="field-error" th:errors="*{fullName}"></span></label>
+                <label>Shahar
+                    <input type="text" th:field="*{city}">
+                    <span class="field-error" th:errors="*{city}"></span></label>
+                <label>Tug'ilgan sana
+                    <input type="date" th:field="*{birthDate}">
+                    <span class="field-error" th:errors="*{birthDate}"></span></label>
+                <label>O'zim haqimda
+                    <textarea th:field="*{about}" rows="4" maxlength="1000"></textarea>
+                    <span class="field-error" th:errors="*{about}"></span></label>
+                <div><button type="submit" class="btn primary">Saqlash</button></div>
+            </form>
+        </section>
+    </main>
+</div>
+<nav th:replace="~{fragments/layout :: mobile-nav}"></nav>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${partner.fullName})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<div class="page two">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main class="main-col">
+        <section class="card chat">
+            <div class="chat-head">
+                <a th:href="@{/messages}" class="icon-btn" title="Orqaga"><svg class="i"><use href="/img/icons.svg#chevron-left"/></svg></a>
+                <a th:replace="~{fragments/layout :: person-link(${partner})}"></a>
+            </div>
+            <div class="chat-body">
+                <p th:if="${messages.isEmpty()}" class="muted center chat-empty">Suhbatni boshlang 👋</p>
+                <div th:each="m : ${messages}" class="bubble" th:classappend="${m.sender == me} ? 'mine' : 'theirs'">
+                    <div class="bubble-text" th:text="${m.content}">Matn</div>
+                    <div class="bubble-time" th:text="${@fmt.time(m.createdAt)}">vaqt</div>
+                </div>
+            </div>
+            <form class="chat-form" th:action="@{/messages/{u}(u=${partner.username})}" method="post">
+                <input type="text" name="content" maxlength="2000" placeholder="Xabar yozing..." required autofocus autocomplete="off">
+                <button type="submit" class="icon-btn accent big" title="Yuborish"><svg class="i"><use href="/img/icons.svg#send"/></svg></button>
+            </form>
+        </section>
+    </main>
+</div>
+</body>
+</html>

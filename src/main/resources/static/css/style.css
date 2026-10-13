@@ -1,0 +1,483 @@
+/* =========================================================
+   Sinfdoshlar — dizayn
+   ========================================================= */
+:root {
+    --brand: #f27a05;
+    --brand-dark: #db6a00;
+    --brand-soft: #fff1e3;
+    --bg: #f6f2ee;
+    --card: #ffffff;
+    --text: #1d1d1f;
+    --text-2: #5f5f66;
+    --muted: #8d8d94;
+    --line: #ece7e2;
+    --hover: #f4eee8;
+    --active: #ede3d9;
+    --error: #d93025;
+    --ok: #1e8e3e;
+    --radius: 16px;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .04);
+    --topbar-h: 56px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--text);
+    background: var(--bg);
+}
+
+a { color: inherit; text-decoration: none; }
+h1, h2, h3 { margin: 0; font-weight: 600; }
+button, input, textarea { font: inherit; color: inherit; }
+summary { list-style: none; cursor: pointer; }
+summary::-webkit-details-marker { display: none; }
+
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.center { text-align: center; }
+.grow { flex: 1; min-width: 0; }
+.inline { display: inline; margin: 0; }
+.ellipsis { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+
+/* ---------- Ikonkalar ---------- */
+.i { width: 22px; height: 22px; flex-shrink: 0; }
+.i-sm { width: 17px; height: 17px; }
+.i-xl { width: 48px; height: 48px; color: var(--brand); opacity: .8; }
+
+/* ---------- Avatar ---------- */
+.avatar {
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+    border-radius: 50%; color: #fff; font-weight: 600;
+    background: var(--brand);
+    width: 40px; height: 40px; font-size: 17px;
+    user-select: none;
+}
+.avatar-32 { width: 32px; height: 32px; font-size: 14px; }
+.avatar-40 { width: 40px; height: 40px; font-size: 17px; }
+.avatar-48 { width: 48px; height: 48px; font-size: 20px; }
+.avatar-56 { width: 56px; height: 56px; font-size: 22px; }
+.avatar-96 { width: 96px; height: 96px; font-size: 38px; }
+.avatar-140 { width: 140px; height: 140px; font-size: 56px; }
+.avatar.ring { box-shadow: 0 0 0 5px var(--card); }
+
+/* ---------- Tugmalar ---------- */
+.btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    height: 38px; padding: 0 18px; border-radius: 12px; border: 0;
+    background: #f1ece7; color: var(--text);
+    font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap;
+    transition: background .15s;
+}
+.btn:hover { background: #e9e2db; }
+.btn.primary { background: var(--brand); color: #fff; }
+.btn.primary:hover { background: var(--brand-dark); }
+.btn.soft { background: #f3f0ed; }
+.btn.block { width: 100%; height: 42px; font-size: 15px; }
+.btn-sm { height: 32px; padding: 0 12px; font-size: 13px; }
+
+.icon-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 50%; border: 0;
+    background: transparent; color: var(--text-2); cursor: pointer;
+}
+.icon-btn:hover { background: var(--hover); color: var(--text); }
+.icon-btn.accent { color: var(--brand); }
+.icon-btn.accent:hover { background: var(--brand-soft); }
+.icon-btn.big { width: 44px; height: 44px; }
+
+.link-button { background: none; border: 0; padding: 0; cursor: pointer; font-size: inherit; }
+.link-button:hover { color: var(--text); }
+
+.count-pill {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 22px; height: 22px; padding: 0 7px; border-radius: 11px;
+    background: var(--brand); color: #fff; font-size: 12px; font-weight: 600;
+}
+
+/* =========================================================
+   Yuqori panel
+   ========================================================= */
+.topbar {
+    position: sticky; top: 0; z-index: 50;
+    height: var(--topbar-h);
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+}
+.topbar-inner {
+    max-width: 1280px; height: 100%; margin: 0 auto; padding: 0 24px;
+    display: grid; grid-template-columns: 220px 1fr auto; align-items: center; gap: 24px;
+}
+.logo { display: inline-flex; align-items: center; gap: 8px; }
+.logo-mark {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 9px; background: var(--brand); color: #fff;
+}
+.logo-mark { font-size: 26px; font-weight: 800; line-height: 1; padding-bottom: 3px; font-family: "Arial Rounded MT Bold", "Segoe UI", Arial, sans-serif; }
+.logo-text { font-size: 21px; font-weight: 700; letter-spacing: -.3px; color: var(--text); }
+
+.topnav { display: flex; justify-content: center; gap: 6px; }
+.topnav a {
+    position: relative; display: flex; align-items: center; gap: 12px;
+    height: 40px; padding: 0 14px; border-radius: 12px; color: var(--text-2);
+}
+.topnav a:hover { background: var(--hover); color: var(--text); }
+.topnav a.active { color: var(--brand); }
+.topnav-label { font-size: 14px; font-weight: 500; }
+.ico { position: relative; display: inline-flex; }
+.dot-badge {
+    position: absolute; top: -7px; left: 12px;
+    min-width: 12px; height: 16px; padding: 0 3px; border-radius: 8px;
+    background: #ff3b30; color: #fff; font-size: 10px; font-weight: 700; line-height: 16px; text-align: center;
+    border: 2px solid #fff; box-sizing: content-box;
+}
+
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.search-pill {
+    display: flex; align-items: center; width: 240px; height: 38px;
+    background: #f3f0ed; border-radius: 12px; padding: 0 4px 0 14px;
+}
+.search-pill input { flex: 1; min-width: 0; border: 0; background: transparent; outline: none; font-size: 14px; }
+.search-pill button { border: 0; background: transparent; color: var(--muted); cursor: pointer; display: flex; padding: 6px; }
+.search-pill:focus-within { background: #fff; box-shadow: 0 0 0 2px var(--brand-soft), 0 0 0 1px var(--brand); }
+
+.user-menu { position: relative; }
+.user-menu summary { display: flex; align-items: center; gap: 4px; color: var(--muted); padding: 2px; border-radius: 20px; }
+.user-menu summary:hover { color: var(--text); }
+
+.dropdown {
+    position: absolute; top: calc(100% + 8px); right: 0; z-index: 60;
+    min-width: 240px; padding: 8px; background: #fff; border-radius: 14px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, .14);
+}
+.dropdown-right { right: 0; min-width: 200px; }
+.dropdown a, .dropdown button {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 9px 10px; border: 0; border-radius: 10px; background: none;
+    font-size: 14px; text-align: left; cursor: pointer;
+}
+.dropdown a:hover, .dropdown button:hover { background: var(--hover); }
+.dropdown form { margin: 0; }
+.dropdown .dropdown-head { padding: 10px; margin-bottom: 4px; border-bottom: 1px solid var(--line); border-radius: 10px 10px 0 0; }
+.dropdown .danger { color: var(--error); }
+
+/* =========================================================
+   Sahifa joylashuvi
+   ========================================================= */
+.page {
+    max-width: 1280px; margin: 0 auto; padding: 20px 24px 40px;
+    display: grid; gap: 24px; align-items: start;
+}
+.page.three { grid-template-columns: 220px minmax(0, 1fr) 300px; }
+.page.two { grid-template-columns: 220px minmax(0, 1fr); }
+.page.two .main-col { max-width: 920px; }
+
+.card {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 16px 20px; margin-bottom: 12px;
+}
+.card-title { font-size: 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.card.narrow { max-width: 560px; }
+.empty { text-align: center; padding: 36px 20px; }
+.empty p { margin: 8px 0; }
+
+/* ---------- Chap ustun ---------- */
+.left-col { position: sticky; top: calc(var(--topbar-h) + 20px); }
+.big-avatar {
+    position: relative; display: flex; align-items: center; justify-content: center;
+    width: 200px; height: 200px; margin: 0 auto 14px; border-radius: 50%;
+    color: #fff; font-size: 84px; font-weight: 600;
+}
+.camera-badge {
+    position: absolute; left: 8px; bottom: 14px;
+    display: flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: 50%;
+    background: #fff; color: var(--text-2); box-shadow: 0 2px 6px rgba(0, 0, 0, .15);
+}
+.camera-badge .i { width: 19px; height: 19px; }
+.publish-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    height: 40px; margin-bottom: 14px; border-radius: 12px;
+    background: #fff; box-shadow: var(--shadow); font-weight: 500; font-size: 14px;
+}
+.publish-btn .i { color: var(--brand); width: 19px; height: 19px; }
+.publish-btn:hover { background: var(--brand-soft); }
+
+.side-menu { display: flex; flex-direction: column; gap: 2px; margin: 0; }
+.side-menu a, .side-menu button {
+    display: flex; align-items: center; gap: 12px; width: 100%;
+    padding: 8px 12px; border: 0; border-radius: 10px; background: none;
+    font-size: 15px; color: var(--text); cursor: pointer; text-align: left;
+}
+.side-menu a span:not(.count), .side-menu button span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.side-menu .i { width: 20px; height: 20px; color: var(--text-2); }
+.side-menu a:hover, .side-menu button:hover { background: var(--hover); }
+.side-menu a.active { background: var(--active); }
+.side-menu a.active .i { color: var(--brand); }
+.side-menu .count { color: var(--brand); font-weight: 600; font-size: 13px; }
+.side-sep { height: 1px; background: var(--line); margin: 12px 8px; }
+
+/* ---------- O'ng ustun ---------- */
+.right-col { position: sticky; top: calc(var(--topbar-h) + 20px); }
+.side-card { padding: 16px; }
+.side-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.side-card-head h3 { font-size: 16px; }
+.side-card-head a.small { color: var(--brand); font-weight: 500; }
+.suggest-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+.suggest-row form { margin: 0; }
+.person-link { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.person-text { display: flex; flex-direction: column; min-width: 0; }
+.person-text .name { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.person-link:hover .name { color: var(--brand-dark); }
+.mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 6px; }
+.mini-friend { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 13px; text-align: center; }
+.mini-friend:hover span:last-child { color: var(--brand-dark); }
+.side-footer { padding: 4px 8px; }
+
+/* =========================================================
+   Postlar
+   ========================================================= */
+.composer { display: flex; gap: 12px; align-items: flex-start; }
+.composer textarea {
+    width: 100%; min-height: 42px; padding: 10px 14px; border: 0; border-radius: 12px;
+    background: #f5f2ef; resize: none; outline: none; font-size: 15px; overflow: hidden;
+}
+.composer textarea:focus { background: #fff; box-shadow: 0 0 0 1px var(--brand); }
+.composer-foot { display: none; justify-content: flex-end; margin-top: 10px; }
+.composer:focus-within .composer-foot, .composer textarea:not(:placeholder-shown) ~ .composer-foot { display: flex; }
+
+.post { padding: 16px 20px 12px; }
+.post-head { display: flex; align-items: center; gap: 12px; }
+.post-head .name { font-weight: 600; font-size: 15px; }
+.post-head .name:hover { color: var(--brand-dark); }
+.post-menu { position: relative; }
+.post-body { margin: 12px 0 10px; font-size: 15px; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; }
+.post-stats { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+.like-bubble {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%; background: var(--brand); color: #fff;
+}
+.like-bubble .i { width: 12px; height: 12px; }
+.post-actions { display: flex; gap: 8px; }
+.pill {
+    display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px;
+    border: 0; border-radius: 18px; background: #f3f0ed; cursor: pointer;
+    font-size: 14px; font-weight: 500; color: var(--text);
+}
+.pill .i { width: 19px; height: 19px; color: var(--text-2); }
+.pill:hover { background: #ebe5df; }
+.pill.klass.active { background: var(--brand); color: #fff; }
+.pill.klass.active .i { color: #fff; }
+
+.comments { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.comments.open { display: block; }
+.comment { display: flex; gap: 10px; margin-bottom: 12px; }
+.comment-body .name { font-weight: 600; font-size: 14px; }
+.comment-body .name:hover { color: var(--brand-dark); }
+.comment-text { font-size: 14px; white-space: pre-wrap; word-wrap: break-word; margin: 1px 0 2px; }
+.comment-form { display: flex; align-items: center; gap: 10px; }
+.comment-form input {
+    flex: 1; min-width: 0; height: 38px; padding: 0 14px; border: 0; border-radius: 19px;
+    background: #f5f2ef; outline: none; font-size: 14px;
+}
+.comment-form input:focus { background: #fff; box-shadow: 0 0 0 1px var(--brand); }
+
+/* =========================================================
+   Profil
+   ========================================================= */
+.profile-card { padding: 0; overflow: hidden; }
+.cover {
+    height: 170px;
+    background:
+        radial-gradient(circle at 20% 120%, rgba(255, 255, 255, .25) 0 30%, transparent 31%),
+        radial-gradient(circle at 85% -20%, rgba(255, 255, 255, .2) 0 35%, transparent 36%),
+        linear-gradient(120deg, var(--c, var(--brand)), #ffb15c);
+}
+.profile-main { display: flex; align-items: flex-end; gap: 20px; padding: 0 24px 18px; margin-top: -60px; flex-wrap: wrap; }
+.profile-info { flex: 1; min-width: 220px; padding-bottom: 4px; }
+.profile-info h1 { font-size: 26px; letter-spacing: -.3px; }
+.facts { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--text-2); font-size: 14px; }
+.facts li { display: flex; align-items: center; gap: 6px; }
+.facts .i { color: var(--muted); }
+.profile-actions { display: flex; gap: 8px; padding-bottom: 6px; position: relative; }
+.profile-actions .dropdown { top: calc(100% + 4px); }
+.about { margin: 0; padding: 14px 24px 18px; border-top: 1px solid var(--line); white-space: pre-wrap; color: var(--text-2); }
+.profile-grid { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 12px; align-items: start; }
+
+/* =========================================================
+   Do'stlar, qidiruv, ro'yxatlar
+   ========================================================= */
+.person-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.person-row:last-child { border-bottom: 0; }
+.friend-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+.friend-card {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    padding: 18px 10px 14px; border-radius: 14px; background: #faf8f6; text-align: center;
+}
+.friend-card .name { font-weight: 600; font-size: 14px; margin-top: 4px; }
+.friend-card .name:hover { color: var(--brand-dark); }
+.friend-card .btn { margin-top: 6px; }
+.search-big {
+    display: flex; align-items: center; gap: 10px; padding: 4px 4px 4px 14px; margin-bottom: 12px;
+    background: #f5f2ef; border-radius: 14px;
+}
+.search-big .i { color: var(--muted); }
+.search-big input { flex: 1; min-width: 0; border: 0; background: transparent; outline: none; height: 40px; }
+
+/* ---------- Xabarlar ---------- */
+.conv-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; margin: 0 -12px; border-radius: 12px; }
+.conv-row:hover { background: var(--hover); }
+.conv-row.unread { background: var(--brand-soft); }
+.conv-top, .conv-bottom { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.conv-top .name { font-weight: 600; }
+.conv-bottom { margin-top: 2px; font-size: 14px; }
+.conv-bottom .muted { flex: 1; min-width: 0; }
+
+.chat { display: flex; flex-direction: column; padding: 0; height: calc(100vh - var(--topbar-h) - 60px); min-height: 420px; }
+.chat-head { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+.chat-body { flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 16px 20px; overflow-y: auto; background: #fbf9f7; }
+.chat-empty { margin: auto; }
+.bubble { max-width: 70%; padding: 8px 12px 6px; border-radius: 18px; word-wrap: break-word; }
+.bubble-text { white-space: pre-wrap; }
+.bubble.mine { align-self: flex-end; background: var(--brand); color: #fff; border-bottom-right-radius: 6px; }
+.bubble.theirs { align-self: flex-start; background: #fff; box-shadow: var(--shadow); border-bottom-left-radius: 6px; }
+.bubble-time { font-size: 11px; text-align: right; margin-top: 2px; opacity: .7; }
+.chat-form { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-top: 1px solid var(--line); }
+.chat-form input {
+    flex: 1; min-width: 0; height: 44px; padding: 0 18px; border: 0; border-radius: 22px;
+    background: #f5f2ef; outline: none;
+}
+.chat-form input:focus { background: #fff; box-shadow: 0 0 0 1px var(--brand); }
+
+/* =========================================================
+   Formalar
+   ========================================================= */
+.form { display: flex; flex-direction: column; gap: 12px; }
+.form label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500; color: var(--text-2); }
+.form label.check { flex-direction: row; align-items: center; gap: 8px; font-weight: 400; }
+.form label.check input { accent-color: var(--brand); width: 16px; height: 16px; }
+.form input[type=text], .form input[type=password], .form input[type=date], .form textarea, .field {
+    width: 100%; padding: 10px 14px; border: 1px solid #e2ddd8; border-radius: 12px;
+    background: #fff; outline: none; font-size: 15px; color: var(--text);
+}
+.form input:focus, .form textarea:focus, .field:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.form textarea { resize: vertical; }
+.field-error { display: block; color: var(--error); font-size: 13px; font-weight: 400; margin-top: 4px; }
+.alert { padding: 10px 14px; border-radius: 12px; margin-bottom: 14px; font-size: 14px; }
+.alert.error { background: #fdeceb; color: var(--error); }
+.alert.ok { background: #e7f5ea; color: var(--ok); }
+
+/* =========================================================
+   Kirish sahifasi
+   ========================================================= */
+.auth-page {
+    min-height: 100vh; display: flex; flex-direction: column;
+    background-color: #fbf6f1;
+    background-image: repeating-radial-gradient(circle at 50% 50vh,
+        transparent 0, transparent 150px,
+        rgba(242, 122, 5, .07) 150px, rgba(242, 122, 5, .07) 205px,
+        transparent 205px, transparent 260px);
+}
+.auth-topbar { grid-template-columns: 1fr; max-width: 960px; }
+.auth-stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 16px; }
+.auth-wrap { display: flex; align-items: stretch; gap: 20px; }
+.auth-card { width: 380px; background: #fff; border-radius: 18px; box-shadow: 0 4px 24px rgba(0, 0, 0, .06); overflow: hidden; }
+.auth-tabs { display: flex; justify-content: center; gap: 22px; border-bottom: 1px solid var(--line); }
+.auth-tabs a { padding: 16px 2px 12px; font-size: 15px; color: var(--muted); border-bottom: 3px solid transparent; }
+.auth-tabs a:hover { color: var(--text); }
+.auth-tabs a.active { color: var(--text); border-color: var(--brand); font-weight: 500; }
+.auth-body { padding: 24px 32px 28px; }
+.auth-body .form { gap: 12px; }
+.auth-body .btn.primary { margin-top: 4px; }
+.password-field { position: relative; }
+.password-field .field { padding-right: 44px; }
+.password-field .eye {
+    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    border: 0; background: none; color: var(--muted); cursor: pointer; padding: 6px; display: flex;
+}
+.password-field .eye.on { color: var(--brand); }
+.two-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.divider { display: flex; align-items: center; gap: 10px; margin: 22px 0 14px; color: var(--muted); font-size: 13px; }
+.divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+.auth-promo {
+    width: 280px; padding: 26px 24px; border-radius: 18px; color: #fff;
+    background: linear-gradient(160deg, #ff9a2e, var(--brand-dark));
+    box-shadow: 0 4px 24px rgba(242, 122, 5, .25);
+    display: flex; flex-direction: column;
+}
+.auth-promo h2 { font-size: 22px; margin: 18px 0 8px; }
+.auth-promo p { margin: 0 0 16px; opacity: .92; font-size: 14px; }
+.auth-promo ul { list-style: none; padding: 0; margin: auto 0 0; display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+.auth-promo li { display: flex; align-items: center; gap: 10px; }
+.promo-art { display: flex; }
+.promo-avatar {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 52px; height: 52px; border-radius: 50%; margin-right: -12px;
+    border: 3px solid #fff; color: #fff; font-weight: 700; font-size: 20px;
+}
+.auth-footer { padding: 18px 16px 24px; text-align: center; color: var(--muted); font-size: 13px; }
+.auth-footer nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 18px; margin-bottom: 8px; }
+.auth-footer a:hover { color: var(--text); }
+
+/* =========================================================
+   Telefon uchun pastki menyu
+   ========================================================= */
+.mobile-nav { display: none; }
+
+/* =========================================================
+   Moslashuvchanlik
+   ========================================================= */
+@media (max-width: 1180px) {
+    .page.three { grid-template-columns: 220px minmax(0, 1fr); }
+    .page.three .right-col { display: none; }
+    .topnav-label { display: none; }
+}
+
+@media (max-width: 860px) {
+    .page.three, .page.two { grid-template-columns: 1fr; padding: 12px 10px 80px; }
+    .left-col { display: none; }
+    .topbar-inner { grid-template-columns: auto 1fr; padding: 0 12px; gap: 12px; }
+    .topnav { display: none; }
+    .topbar-right { justify-content: flex-end; }
+    .search-pill { width: auto; flex: 1; max-width: 260px; }
+    .profile-grid { grid-template-columns: 1fr; }
+    .profile-side { order: 2; }
+    .card { border-radius: 14px; padding: 14px 16px; }
+
+    .mobile-nav {
+        display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+        background: #fff; border-top: 1px solid var(--line);
+        padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+    }
+    .mobile-nav a {
+        position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+        font-size: 11px; color: var(--muted);
+    }
+    .mobile-nav a.active { color: var(--brand); }
+    .mobile-nav .dot-badge { left: 50%; top: -4px; margin-left: 2px; }
+
+    .chat { height: calc(100vh - var(--topbar-h) - 100px); }
+}
+
+@media (max-width: 760px) {
+    .auth-promo { display: none; }
+    .auth-card { width: 100%; max-width: 400px; }
+    .auth-wrap { width: 100%; justify-content: center; }
+    .auth-body { padding: 20px 20px 24px; }
+}
+
+@media (max-width: 520px) {
+    .logo-text { display: none; }
+    .auth-topbar .logo-text { display: inline; }
+    .profile-main { flex-direction: column; align-items: center; text-align: center; margin-top: -70px; }
+    .facts { justify-content: center; }
+    .profile-actions { justify-content: center; flex-wrap: wrap; }
+    .avatar-140 { width: 120px; height: 120px; font-size: 48px; }
+    .cover { height: 130px; }
+    .bubble { max-width: 85%; }
+}

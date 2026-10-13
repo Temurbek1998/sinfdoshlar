@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<article th:fragment="post(p)" class="card post" th:id="'post-' + ${p.id}">
+    <header class="post-head">
+        <a th:href="@{/profile/{u}(u=${p.author.username})}">
+            <span class="avatar avatar-40" th:style="'background:' + ${p.author.avatarColor}" th:text="${p.author.initial}">A</span>
+        </a>
+        <div class="grow">
+            <a class="name" th:href="@{/profile/{u}(u=${p.author.username})}" th:text="${p.author.fullName}">Ism</a>
+            <div class="muted small" th:text="${@fmt.ago(p.createdAt)}">sana</div>
+        </div>
+        <details class="post-menu" th:if="${p.author == me}">
+            <summary class="icon-btn" title="Yana"><svg class="i"><use href="/img/icons.svg#more"/></svg></summary>
+            <div class="dropdown dropdown-right">
+                <form th:action="@{/posts/{id}/delete(id=${p.id})}" method="post"
+                      onsubmit="return confirm('Postni o\'chirasizmi?')">
+                    <button type="submit" class="danger"><svg class="i"><use href="/img/icons.svg#trash"/></svg> O'chirish</button>
+                </form>
+            </div>
+        </details>
+    </header>
+
+    <p class="post-body" th:text="${p.content}">Matn</p>
+
+    <div class="post-stats" th:if="${!p.likedBy.isEmpty()}">
+        <span class="like-bubble"><svg class="i"><use href="/img/icons.svg#like"/></svg></span>
+        <span th:text="${p.likedBy.size()} + ' klass'">0 klass</span>
+    </div>
+
+    <div class="post-actions">
+        <button type="button" class="pill" data-toggle-comments th:attr="data-target='comments-' + ${p.id}">
+            <svg class="i"><use href="/img/icons.svg#chat"/></svg>
+            <span th:text="${p.comments.size()}">0</span>
+        </button>
+        <form th:action="@{/posts/{id}/like(id=${p.id})}" method="post" class="inline">
+            <button type="submit" class="pill klass" th:classappend="${p.isLikedBy(me)} ? 'active'">
+                <svg class="i"><use href="/img/icons.svg#like"/></svg> Klass
+            </button>
+        </form>
+    </div>
+
+    <section class="comments" th:id="'comments-' + ${p.id}" th:classappend="${!p.comments.isEmpty()} ? 'open'">
+        <div class="comment" th:each="c : ${p.comments}">
+            <a th:href="@{/profile/{u}(u=${c.author.username})}">
+                <span class="avatar avatar-32" th:style="'background:' + ${c.author.avatarColor}" th:text="${c.author.initial}">A</span>
+            </a>
+            <div class="comment-body">
+                <a class="name" th:href="@{/profile/{u}(u=${c.author.username})}" th:text="${c.author.fullName}">Ism</a>
+                <div class="comment-text" th:text="${c.content}">Izoh</div>
+                <div class="muted small">
+                    <span th:text="${@fmt.ago(c.createdAt)}">vaqt</span>
+                    <form th:if="${c.author == me or p.author == me}" th:action="@{/comments/{id}/delete(id=${c.id})}"
+                          method="post" class="inline">
+                        · <button type="submit" class="link-button muted">o'chirish</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <form class="comment-form" th:action="@{/posts/{id}/comments(id=${p.id})}" method="post">
+            <span class="avatar avatar-32" th:style="'background:' + ${me.avatarColor}" th:text="${me.initial}">A</span>
+            <input type="text" name="content" maxlength="1000" placeholder="Izoh yozing..." required autocomplete="off">
+            <button type="submit" class="icon-btn accent" title="Yuborish"><svg class="i"><use href="/img/icons.svg#send"/></svg></button>
+        </form>
+    </section>
+</article>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Kirish')}"></head>
+<body class="auth-page">
+<header class="topbar">
+    <div class="topbar-inner auth-topbar">
+        <a class="logo" th:href="@{/}">
+            <span class="logo-mark">s</span>
+            <span class="logo-text">sinfdoshlar</span>
+        </a>
+    </div>
+</header>
+
+<main class="auth-stage">
+    <div class="auth-wrap">
+        <section class="auth-card">
+            <nav class="auth-tabs">
+                <a class="active" th:href="@{/login}">Kirish</a>
+                <a th:href="@{/register}">Ro'yxatdan o'tish</a>
+            </nav>
+            <div class="auth-body">
+                <div class="alert error" th:if="${param.error}">Login yoki parol noto'g'ri.</div>
+                <div class="alert ok" th:if="${param.logout}">Tizimdan chiqdingiz.</div>
+                <div class="alert ok" th:if="${success}" th:text="${success}"></div>
+                <form th:action="@{/login}" method="post" class="form">
+                    <input class="field" type="text" name="username" placeholder="Login" required autofocus>
+                    <div class="password-field">
+                        <input class="field" type="password" name="password" placeholder="Parol" required>
+                        <button type="button" class="eye" data-toggle-password title="Parolni ko'rsatish">
+                            <svg class="i"><use href="/img/icons.svg#eye"/></svg></button>
+                    </div>
+                    <label class="check"><input type="checkbox" name="remember-me" checked> Meni eslab qol</label>
+                    <button type="submit" class="btn primary block">Kirish</button>
+                </form>
+                <div class="divider"><span>Sinfdoshlarda profilingiz yo'qmi?</span></div>
+                <a class="btn soft block" th:href="@{/register}">Ro'yxatdan o'tish</a>
+            </div>
+        </section>
+
+        <aside class="auth-promo">
+            <div class="promo-art">
+                <span class="promo-avatar" style="background:hsl(28,65%,55%)">A</span>
+                <span class="promo-avatar" style="background:hsl(200,65%,55%)">D</span>
+                <span class="promo-avatar" style="background:hsl(145,65%,55%)">J</span>
+                <span class="promo-avatar" style="background:hsl(340,65%,55%)">M</span>
+            </div>
+            <h2>Sinfdoshlaringizni toping</h2>
+            <p>Eski do'stlar, kursdoshlar va hamkasblar bilan bog'laning, yangiliklar bilan bo'lishing.</p>
+            <ul>
+                <li><svg class="i i-sm"><use href="/img/icons.svg#users"/></svg> Do'stlar va so'rovlar</li>
+                <li><svg class="i i-sm"><use href="/img/icons.svg#like"/></svg> Postlar va "Klass"lar</li>
+                <li><svg class="i i-sm"><use href="/img/icons.svg#mail"/></svg> Shaxsiy xabarlar</li>
+            </ul>
+        </aside>
+    </div>
+</main>
+
+<footer class="auth-footer">
+    <nav><a href="#">O'zbekcha</a><a href="#">Yordam</a><a href="#">Qoidalar</a><a href="#">Maxfiylik</a></nav>
+    <div>© 2026 Sinfdoshlar</div>
+</footer>
+</body>
+</html>

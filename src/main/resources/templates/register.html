@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Ro\'yxatdan o\'tish')}"></head>
+<body class="auth-page">
+<header class="topbar">
+    <div class="topbar-inner auth-topbar">
+        <a class="logo" th:href="@{/}">
+            <span class="logo-mark">s</span>
+            <span class="logo-text">sinfdoshlar</span>
+        </a>
+    </div>
+</header>
+
+<main class="auth-stage">
+    <div class="auth-wrap single">
+        <section class="auth-card">
+            <nav class="auth-tabs">
+                <a th:href="@{/login}">Kirish</a>
+                <a class="active" th:href="@{/register}">Ro'yxatdan o'tish</a>
+            </nav>
+            <div class="auth-body">
+                <form th:action="@{/register}" th:object="${form}" method="post" class="form">
+                    <div>
+                        <input class="field" type="text" th:field="*{fullName}" placeholder="Ism va familiya" required>
+                        <span class="field-error" th:errors="*{fullName}"></span>
+                    </div>
+                    <div>
+                        <input class="field" type="text" th:field="*{username}" placeholder="Login (lotin harflarida)" required>
+                        <span class="field-error" th:errors="*{username}"></span>
+                    </div>
+                    <div class="two-fields">
+                        <div>
+                            <input class="field" type="text" th:field="*{city}" placeholder="Shahar">
+                            <span class="field-error" th:errors="*{city}"></span>
+                        </div>
+                        <div>
+                            <input class="field" type="date" th:field="*{birthDate}" title="Tug'ilgan sana">
+                            <span class="field-error" th:errors="*{birthDate}"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <input class="field" type="password" th:field="*{password}" placeholder="Parol (kamida 6 belgi)" required>
+                        <span class="field-error" th:errors="*{password}"></span>
+                    </div>
+                    <div>
+                        <input class="field" type="password" th:field="*{confirmPassword}" placeholder="Parolni takrorlang" required>
+                        <span class="field-error" th:errors="*{confirmPassword}"></span>
+                    </div>
+                    <button type="submit" class="btn primary block">Ro'yxatdan o'tish</button>
+                </form>
+                <div class="divider"><span>Akkauntingiz bormi?</span></div>
+                <a class="btn soft block" th:href="@{/login}">Kirish</a>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer class="auth-footer">
+    <nav><a href="#">O'zbekcha</a><a href="#">Yordam</a><a href="#">Qoidalar</a><a href="#">Maxfiylik</a></nav>
+    <div>© 2026 Sinfdoshlar</div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Xabarlar')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<div class="page two">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main class="main-col">
+        <section class="card">
+            <h2 class="card-title">Xabarlar</h2>
+            <div th:if="${conversations.isEmpty()}" class="empty">
+                <svg class="i i-xl"><use href="/img/icons.svg#mail"/></svg>
+                <p class="muted">Hali suhbatlar yo'q. Do'stingiz sahifasida "Xabar yozish" tugmasini bosing.</p>
+            </div>
+            <a class="conv-row" th:each="c : ${conversations}"
+               th:classappend="${c.unread > 0} ? 'unread'"
+               th:href="@{/messages/{u}(u=${c.partner.username})}">
+                <span class="avatar avatar-48" th:style="'background:' + ${c.partner.avatarColor}" th:text="${c.partner.initial}">A</span>
+                <div class="grow">
+                    <div class="conv-top">
+                        <span class="name" th:text="${c.partner.fullName}">Ism</span>
+                        <span class="muted small" th:text="${@fmt.time(c.lastMessage.createdAt)}">vaqt</span>
+                    </div>
+                    <div class="conv-bottom">
+                        <span class="muted ellipsis">
+                            <span th:if="${c.lastMessage.sender == me}">Siz: </span><span th:text="${c.lastMessage.content}">Matn</span>
+                        </span>
+                        <span class="count-pill" th:if="${c.unread > 0}" th:text="${c.unread}">1</span>
+                    </div>
+                </div>
+            </a>
+        </section>
+    </main>
+</div>
+<nav th:replace="~{fragments/layout :: mobile-nav}"></nav>
+</body>
+</html>

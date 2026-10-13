@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Qidiruv')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<div class="page two">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main class="main-col">
+        <section class="card">
+            <h2 class="card-title">Odamlarni topish</h2>
+            <form th:action="@{/search}" method="get" class="search-big">
+                <svg class="i"><use href="/img/icons.svg#search"/></svg>
+                <input type="search" name="q" th:value="${q}" placeholder="Ism, login yoki shahar" autofocus>
+                <button class="btn primary">Qidirish</button>
+            </form>
+            <p th:if="${q != null and !q.isBlank() and results.isEmpty()}" class="muted">Hech kim topilmadi.</p>
+            <div class="person-row" th:each="u : ${results}">
+                <a th:replace="~{fragments/layout :: person-link(${u})}"></a>
+                <a class="btn" th:href="@{/profile/{n}(n=${u.username})}">Sahifasi</a>
+            </div>
+        </section>
+    </main>
+</div>
+<nav th:replace="~{fragments/layout :: mobile-nav}"></nav>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Lenta')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<div class="page three">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+
+    <main class="main-col">
+        <form id="composer" class="card composer" th:action="@{/posts}" method="post">
+            <span class="avatar avatar-40" th:style="'background:' + ${me.avatarColor}" th:text="${me.initial}">A</span>
+            <div class="grow">
+                <textarea name="content" rows="2" maxlength="2000" required data-autogrow
+                          th:placeholder="'Nima yangiliklar, ' + ${#strings.substringBefore(me.fullName + ' ', ' ')} + '?'"></textarea>
+                <div class="composer-foot">
+                    <button type="submit" class="btn primary">Nashr qilish</button>
+                </div>
+            </div>
+        </form>
+
+        <div th:if="${posts.isEmpty()}" class="card empty">
+            <svg class="i i-xl"><use href="/img/icons.svg#users"/></svg>
+            <p>Lenta hozircha bo'sh.</p>
+            <p class="muted">Do'stlar qo'shing yoki birinchi postingizni yozing.</p>
+            <a class="btn primary" th:href="@{/search}">Odamlarni topish</a>
+        </div>
+        <th:block th:each="p : ${posts}">
+            <article th:replace="~{fragments/post :: post(${p})}"></article>
+        </th:block>
+    </main>
+
+    <aside class="right-col">
+        <section class="card side-card" th:unless="${suggestions.isEmpty()}">
+            <div class="side-card-head">
+                <h3>Siz tanishishingiz mumkin</h3>
+                <a th:href="@{/}" class="icon-btn" title="Yangilash"><svg class="i i-sm"><use href="/img/icons.svg#refresh"/></svg></a>
+            </div>
+            <div class="suggest-row" th:each="u : ${suggestions}">
+                <a th:replace="~{fragments/layout :: person-link(${u})}"></a>
+                <form th:action="@{/friends/{n}/add(n=${u.username})}" method="post">
+                    <button class="icon-btn accent" title="Do'st qo'shish"><svg class="i"><use href="/img/icons.svg#user-plus"/></svg></button>
+                </form>
+            </div>
+        </section>
+
+        <section class="card side-card">
+            <div class="side-card-head">
+                <h3>Do'stlarim <span class="muted" th:text="${myFriends.size()}">0</span></h3>
+                <a th:href="@{/friends}" class="small">Hammasi</a>
+            </div>
+            <p th:if="${myFriends.isEmpty()}" class="muted small">Hozircha do'stlaringiz yo'q.</p>
+            <div class="mini-grid">
+                <a th:each="f, st : ${myFriends}" th:if="${st.index < 6}" th:href="@{/profile/{n}(n=${f.username})}" class="mini-friend">
+                    <span class="avatar avatar-56" th:style="'background:' + ${f.avatarColor}" th:text="${f.initial}">A</span>
+                    <span th:text="${#strings.substringBefore(f.fullName + ' ', ' ')}">Ism</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="side-footer muted small">© 2026 Sinfdoshlar · Java + Spring Boot</footer>
+    </aside>
+</div>
+<nav th:replace="~{fragments/layout :: mobile-nav}"></nav>
+</body>
+</html>

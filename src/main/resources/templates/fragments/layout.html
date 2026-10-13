@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' | Sinfdoshlar'">Sinfdoshlar</title>
+    <link rel="icon" th:href="@{/img/favicon.svg}" type="image/svg+xml">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/app.js}" defer></script>
+</head>
+<body>
+
+<!-- ========== Yuqori panel ========== -->
+<header th:fragment="header" class="topbar">
+    <div class="topbar-inner">
+        <a class="logo" th:href="@{/}">
+            <span class="logo-mark">s</span>
+            <span class="logo-text">sinfdoshlar</span>
+        </a>
+
+        <nav class="topnav" th:if="${me != null}">
+            <a th:href="@{/}" title="Lenta" th:classappend="${currentPath == '/'} ? 'active'">
+                <svg class="i"><use href="/img/icons.svg#home"/></svg>
+                <span class="topnav-label">Lenta</span>
+            </a>
+            <a th:href="@{/messages}" title="Xabarlar" th:classappend="${#strings.startsWith(currentPath, '/messages')} ? 'active'">
+                <span class="ico"><svg class="i"><use href="/img/icons.svg#mail"/></svg><span class="dot-badge" th:if="${unreadMessages > 0}" th:text="${unreadMessages}">1</span></span>
+                <span class="topnav-label">Xabarlar</span>
+            </a>
+            <a th:href="@{/friends}" title="Do'stlar" th:classappend="${currentPath == '/friends'} ? 'active'">
+                <span class="ico"><svg class="i"><use href="/img/icons.svg#users"/></svg><span class="dot-badge" th:if="${pendingRequests > 0}" th:text="${pendingRequests}">1</span></span>
+                <span class="topnav-label">Do'stlar</span>
+            </a>
+            <a th:href="@{/search}" title="Odamlar" th:classappend="${currentPath == '/search'} ? 'active'">
+                <svg class="i"><use href="/img/icons.svg#user-plus"/></svg>
+                <span class="topnav-label">Odamlar</span>
+            </a>
+        </nav>
+
+        <div class="topbar-right" th:if="${me != null}">
+            <form class="search-pill" th:action="@{/search}" method="get">
+                <input type="search" name="q" placeholder="Saytda qidirish" th:value="${q}">
+                <button type="submit" aria-label="Qidirish"><svg class="i"><use href="/img/icons.svg#search"/></svg></button>
+            </form>
+            <details class="user-menu">
+                <summary>
+                    <span class="avatar avatar-32" th:style="'background:' + ${me.avatarColor}" th:text="${me.initial}">A</span>
+                    <svg class="i i-sm"><use href="/img/icons.svg#chevron-down"/></svg>
+                </summary>
+                <div class="dropdown">
+                    <a class="dropdown-head" th:href="@{/profile/{u}(u=${me.username})}">
+                        <span class="avatar avatar-40" th:style="'background:' + ${me.avatarColor}" th:text="${me.initial}">A</span>
+                        <span><b th:text="${me.fullName}">Ism</b><br><small class="muted">Mening sahifam</small></span>
+                    </a>
+                    <a th:href="@{/settings}"><svg class="i"><use href="/img/icons.svg#settings"/></svg> Sozlamalar</a>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit"><svg class="i"><use href="/img/icons.svg#logout"/></svg> Chiqish</button>
+                    </form>
+                </div>
+            </details>
+        </div>
+    </div>
+</header>
+
+<!-- ========== Chap ustun ========== -->
+<aside th:fragment="sidebar" class="left-col">
+    <a class="big-avatar" th:href="@{/profile/{u}(u=${me.username})}"
+       th:style="'background:' + ${me.avatarColor}">
+        <span th:text="${me.initial}">A</span>
+        <span class="camera-badge" title="Profilni tahrirlash"><svg class="i"><use href="/img/icons.svg#camera"/></svg></span>
+    </a>
+    <a class="publish-btn" href="/#composer">
+        <svg class="i"><use href="/img/icons.svg#plus-circle"/></svg> Nashr qilish
+    </a>
+    <nav class="side-menu">
+        <a th:href="@{/profile/{u}(u=${me.username})}"
+           th:classappend="${currentPath == '/profile/' + me.username} ? 'active'">
+            <svg class="i"><use href="/img/icons.svg#user"/></svg><span th:text="${me.fullName}">Ism</span></a>
+        <a th:href="@{/}" th:classappend="${currentPath == '/'} ? 'active'">
+            <svg class="i"><use href="/img/icons.svg#home"/></svg><span>Lenta</span></a>
+        <a th:href="@{/friends}" th:classappend="${currentPath == '/friends'} ? 'active'">
+            <svg class="i"><use href="/img/icons.svg#users"/></svg><span>Do'stlar</span>
+            <span class="count" th:if="${pendingRequests > 0}" th:text="'+' + ${pendingRequests}">+1</span></a>
+        <a th:href="@{/messages}" th:classappend="${#strings.startsWith(currentPath, '/messages')} ? 'active'">
+            <svg class="i"><use href="/img/icons.svg#mail"/></svg><span>Xabarlar</span>
+            <span class="count" th:if="${unreadMessages > 0}" th:text="${unreadMessages}">1</span></a>
+        <a th:href="@{/search}" th:classappend="${currentPath == '/search'} ? 'active'">
+            <svg class="i"><use href="/img/icons.svg#search"/></svg><span>Odamlarni topish</span></a>
+        <a th:href="@{/settings}" th:classappend="${currentPath == '/settings'} ? 'active'">
+            <svg class="i"><use href="/img/icons.svg#settings"/></svg><span>Sozlamalar</span></a>
+    </nav>
+    <div class="side-sep"></div>
+    <form th:action="@{/logout}" method="post" class="side-menu">
+        <button type="submit"><svg class="i"><use href="/img/icons.svg#logout"/></svg><span>Chiqish</span></button>
+    </form>
+</aside>
+
+<!-- ========== Pastki menyu (telefon) ========== -->
+<nav th:fragment="mobile-nav" class="mobile-nav" th:if="${me != null}">
+    <a th:href="@{/}" th:classappend="${currentPath == '/'} ? 'active'">
+        <svg class="i"><use href="/img/icons.svg#home"/></svg><span>Lenta</span></a>
+    <a th:href="@{/friends}" th:classappend="${currentPath == '/friends'} ? 'active'">
+        <svg class="i"><use href="/img/icons.svg#users"/></svg><span>Do'stlar</span>
+        <b class="dot-badge" th:if="${pendingRequests > 0}" th:text="${pendingRequests}">1</b></a>
+    <a th:href="@{/messages}" th:classappend="${#strings.startsWith(currentPath, '/messages')} ? 'active'">
+        <svg class="i"><use href="/img/icons.svg#mail"/></svg><span>Xabarlar</span>
+        <b class="dot-badge" th:if="${unreadMessages > 0}" th:text="${unreadMessages}">1</b></a>
+    <a th:href="@{/search}" th:classappend="${currentPath == '/search'} ? 'active'">
+        <svg class="i"><use href="/img/icons.svg#search"/></svg><span>Qidiruv</span></a>
+    <a th:href="@{/profile/{u}(u=${me.username})}" th:classappend="${currentPath == '/profile/' + me.username} ? 'active'">
+        <svg class="i"><use href="/img/icons.svg#user"/></svg><span>Profil</span></a>
+</nav>
+
+<!-- ========== Kichik foydalanuvchi kartasi ========== -->
+<a th:fragment="person-link(u)" class="person-link" th:href="@{/profile/{n}(n=${u.username})}">
+    <span class="avatar avatar-40" th:style="'background:' + ${u.avatarColor}" th:text="${u.initial}">A</span>
+    <span class="person-text">
+        <span class="name" th:text="${u.fullName}">Ism</span>
+        <span class="muted small" th:text="${u.city ?: '@' + u.username}">Shahar</span>
+    </span>
+</a>
+
+</body>
+</html>
