@@ -3,6 +3,7 @@ services:
     name: sinfdoshlar
     runtime: docker
     plan: free
+    region: frankfurt
     healthCheckPath: /login
     envVars:
       - key: DATABASE_URL
