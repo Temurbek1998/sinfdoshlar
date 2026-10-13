@@ -7,6 +7,20 @@
     <aside th:replace="~{fragments/layout :: sidebar}"></aside>
 
     <main class="main-col">
+        <div class="m-add-row">
+            <label class="m-add" for="composer-image">
+                <span class="m-add-circle"><svg class="i"><use href="/img/icons.svg#plus"/></svg></span>
+                <span>Qo'shish</span>
+            </label>
+            <a class="m-add" th:href="@{/photos}">
+                <span class="m-add-circle"><svg class="i"><use href="/img/icons.svg#image"/></svg></span><span>Fotolar</span></a>
+            <a class="m-add" th:href="@{/music}">
+                <span class="m-add-circle"><svg class="i"><use href="/img/icons.svg#music"/></svg></span><span>Musiqa</span></a>
+            <a class="m-add" th:href="@{/video}">
+                <span class="m-add-circle"><svg class="i"><use href="/img/icons.svg#video"/></svg></span><span>Video</span></a>
+            <a class="m-add" th:href="@{/guests}">
+                <span class="m-add-circle"><svg class="i"><use href="/img/icons.svg#footprints"/></svg></span><span>Mehmonlar</span></a>
+        </div>
         <form th:replace="~{fragments/composer :: composer(${'Nima yangiliklar, ' + #strings.substringBefore(me.fullName + ' ', ' ') + '?'})}"></form>
 
         <div th:if="${posts.isEmpty()}" class="card empty">

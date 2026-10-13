@@ -60,6 +60,22 @@
             </details>
         </div>
     </div>
+    <nav class="mobile-top" th:if="${me != null}">
+        <a th:href="@{/menu}" title="Menyu" th:classappend="${currentPath == '/menu'} ? 'active'">
+            <span class="ico"><svg class="i"><use href="/img/icons.svg#menu"/></svg><span class="dot-badge green" th:if="${unseenGuests > 0}" th:text="${unseenGuests}">1</span></span></a>
+        <a th:href="@{/}" title="Lenta" th:classappend="${currentPath == '/'} ? 'active'">
+            <span class="ico"><svg class="i"><use href="/img/icons.svg#home"/></svg></span></a>
+        <a th:href="@{/messages}" title="Xabarlar" th:classappend="${#strings.startsWith(currentPath, '/messages')} ? 'active'">
+            <span class="ico"><svg class="i"><use href="/img/icons.svg#mail"/></svg><span class="dot-badge" th:if="${unreadMessages > 0}" th:text="${unreadMessages}">1</span></span></a>
+        <a th:href="@{/discussions}" title="Muhokamalar" th:classappend="${currentPath == '/discussions'} ? 'active'">
+            <span class="ico"><svg class="i"><use href="/img/icons.svg#chat"/></svg></span></a>
+        <a th:href="@{/friends}" title="Do'stlar" th:classappend="${currentPath == '/friends'} ? 'active'">
+            <span class="ico"><svg class="i"><use href="/img/icons.svg#users"/></svg><span class="dot-badge" th:if="${pendingRequests > 0}" th:text="${pendingRequests}">1</span></span></a>
+        <a th:href="@{/notifications}" title="Bildirishnomalar" th:classappend="${currentPath == '/notifications'} ? 'active'">
+            <span class="ico"><svg class="i"><use href="/img/icons.svg#bell"/></svg><span class="dot-badge green" th:if="${unseenNotifications > 0}" th:text="${unseenNotifications}">1</span></span></a>
+        <a th:href="@{/search}" title="Qidirish" th:classappend="${currentPath == '/search'} ? 'active'">
+            <span class="ico"><svg class="i"><use href="/img/icons.svg#search"/></svg></span></a>
+    </nav>
     <div class="toast error" th:if="${error}" th:text="${error}" data-toast>Xato</div>
     <div class="toast ok" th:if="${success}" th:text="${success}" data-toast>Tayyor</div>
 </header>

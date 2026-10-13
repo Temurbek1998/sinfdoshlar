@@ -743,3 +743,49 @@ body.player-on { padding-bottom: 80px; }
     .post-image { margin: 10px -14px; }
     .hero-photo .hero-upload { right: 6px; bottom: 6px; }
 }
+
+/* =========================================================
+   Telefon: OK uslubidagi yuqori ikonkalar qatori
+   ========================================================= */
+.mobile-top, .m-add-row { display: none; }
+@media (max-width: 860px) {
+    .topbar { height: auto; }
+    .topbar-inner { display: none; }
+    .mobile-top {
+        display: flex; justify-content: space-between; align-items: center;
+        height: 52px; padding: 0 6px; max-width: 640px; margin: 0 auto;
+    }
+    .mobile-top a {
+        display: flex; align-items: center; justify-content: center; flex: 1;
+        height: 44px; border-radius: 12px; color: #4a4a50;
+    }
+    .mobile-top a.active { color: var(--brand); }
+    .mobile-top a:active { background: var(--hover); }
+    .mobile-top .i { width: 24px; height: 24px; }
+    .mobile-top .dot-badge { top: -6px; left: 14px; }
+    .mobile-nav { display: none !important; }
+    .page.three, .page.two { padding: 8px 0 24px; gap: 8px; grid-template-columns: minmax(0, 1fr); }
+    .main-col { min-width: 0; }
+    .page.solo { padding: 8px 0 24px; grid-template-columns: 1fr; }
+    .card, .profile-panel { border-radius: 0; box-shadow: none; margin-bottom: 8px; }
+    .player { bottom: 0; }
+    body.player-on { padding-bottom: 110px; }
+    .toast { top: 60px; }
+
+    .m-add-row {
+        display: flex; gap: 14px; overflow-x: auto; padding: 8px 14px 6px; scrollbar-width: none;
+    }
+    .m-add { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: none; width: 72px; font-size: 13px; color: var(--text-2); cursor: pointer; }
+    .m-add-circle {
+        display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%;
+        background: #fff; color: #4a4a50; box-shadow: 0 1px 3px rgba(0, 0, 0, .08);
+    }
+    .m-add:first-child .m-add-circle { background: #ece8e4; color: var(--text); }
+    .m-add-circle .i { width: 26px; height: 26px; }
+    .post { padding: 14px 14px 10px; }
+    .post-image { margin: 10px -14px; }
+}
+@media (max-width: 520px) {
+    .panel-actions { flex-wrap: nowrap; gap: 6px; padding: 14px 12px; }
+    .panel-actions .btn { padding: 0 12px; font-size: 14px; }
+}
