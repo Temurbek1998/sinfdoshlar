@@ -64,7 +64,7 @@
 
 <!-- ========== Chap ustun ========== -->
 <aside th:fragment="sidebar" class="left-col">
-    <a class="big-avatar" th:href="@{/profile/{u}(u=${me.username})}"
+    <a class="big-avatar" th:unless="${hideSidebarAvatar}" th:href="@{/profile/{u}(u=${me.username})}"
        th:style="'background:' + ${me.avatarColor}">
         <span th:text="${me.initial}">A</span>
         <span class="camera-badge" title="Profilni tahrirlash"><svg class="i"><use href="/img/icons.svg#camera"/></svg></span>

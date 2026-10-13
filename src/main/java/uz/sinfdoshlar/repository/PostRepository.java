@@ -15,4 +15,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findFeed(@Param("authors") Collection<User> authors);
 
     List<Post> findByAuthorOrderByCreatedAtDesc(User author);
+
+    @Query("select count(l) from Post p join p.likedBy l where p.author = :author")
+    long countLikesReceived(@Param("author") User author);
 }

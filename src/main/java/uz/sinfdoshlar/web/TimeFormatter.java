@@ -26,6 +26,17 @@ public class TimeFormatter {
         return date(time.toLocalDate());
     }
 
+    public String lastSeen(uz.sinfdoshlar.model.User user) {
+        if (user.isOnline()) return "Hozir saytda";
+        if (user.getLastSeenAt() == null) return "Hali saytga kirmagan";
+        return "Oxirgi tashrif: " + ago(user.getLastSeenAt());
+    }
+
+    /** Yoshga mos qo'shimcha: "26 yosh". */
+    public String age(Integer years) {
+        return years == null ? "" : years + " yosh";
+    }
+
     /** Suhbatdagi xabar vaqti: bugun bo'lsa faqat soat. */
     public String time(LocalDateTime time) {
         if (time == null) return "";

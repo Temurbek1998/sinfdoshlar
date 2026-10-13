@@ -6,83 +6,155 @@
 <div class="page two">
     <aside th:replace="~{fragments/layout :: sidebar}"></aside>
 
-    <main class="main-col">
-        <section class="card profile-card">
-            <div class="cover" th:style="'--c:' + ${user.avatarColor}"></div>
-            <div class="profile-main">
-                <span class="avatar avatar-140 ring" th:style="'background:' + ${user.avatarColor}" th:text="${user.initial}">A</span>
-                <div class="profile-info">
-                    <h1 th:text="${user.fullName}">Ism</h1>
-                    <ul class="facts">
-                        <li th:if="${user.city}"><svg class="i i-sm"><use href="/img/icons.svg#pin"/></svg><span th:text="${user.city}">Shahar</span></li>
-                        <li th:if="${user.birthDate}"><svg class="i i-sm"><use href="/img/icons.svg#calendar"/></svg><span th:text="${@fmt.date(user.birthDate)}">sana</span></li>
-                        <li><svg class="i i-sm"><use href="/img/icons.svg#users"/></svg><span th:text="${friends.size()} + ' do\'st'">0</span></li>
-                    </ul>
-                </div>
-                <div class="profile-actions" th:switch="${relation}">
-                    <a th:case="'SELF'" class="btn" th:href="@{/settings}"><svg class="i i-sm"><use href="/img/icons.svg#edit"/></svg> Tahrirlash</a>
-                    <th:block th:case="'NONE'">
-                        <form th:action="@{/friends/{u}/add(u=${user.username})}" method="post" class="inline">
-                            <button class="btn primary"><svg class="i i-sm"><use href="/img/icons.svg#user-plus"/></svg> Do'st qo'shish</button></form>
-                        <a class="btn" th:href="@{/messages/{u}(u=${user.username})}"><svg class="i i-sm"><use href="/img/icons.svg#mail"/></svg> Xabar</a>
-                    </th:block>
-                    <th:block th:case="'REQUEST_SENT'">
-                        <form th:action="@{/friends/{u}/remove(u=${user.username})}" method="post" class="inline">
-                            <button class="btn">So'rov yuborildi · bekor qilish</button></form>
-                        <a class="btn" th:href="@{/messages/{u}(u=${user.username})}"><svg class="i i-sm"><use href="/img/icons.svg#mail"/></svg> Xabar</a>
-                    </th:block>
-                    <th:block th:case="'REQUEST_RECEIVED'">
-                        <form th:action="@{/friends/{u}/accept(u=${user.username})}" method="post" class="inline">
-                            <button class="btn primary">Qabul qilish</button></form>
-                        <form th:action="@{/friends/{u}/remove(u=${user.username})}" method="post" class="inline">
-                            <button class="btn">Rad etish</button></form>
-                    </th:block>
-                    <th:block th:case="'FRIENDS'">
-                        <a class="btn primary" th:href="@{/messages/{u}(u=${user.username})}"><svg class="i i-sm"><use href="/img/icons.svg#mail"/></svg> Xabar yozish</a>
-                        <details class="post-menu">
-                            <summary class="btn"><svg class="i i-sm"><use href="/img/icons.svg#user-check"/></svg> Do'stlar</summary>
-                            <div class="dropdown dropdown-right">
-                                <form th:action="@{/friends/{u}/remove(u=${user.username})}" method="post"
-                                      onsubmit="return confirm('Do\'stlikdan chiqarasizmi?')">
-                                    <button type="submit" class="danger">Do'stlikdan chiqarish</button>
-                                </form>
-                            </div>
-                        </details>
-                    </th:block>
+    <main class="main-col profile-page">
+        <!-- ===== Profil sarlavhasi ===== -->
+        <section class="profile-head">
+            <div class="hero-photo" th:style="'background:' + ${user.avatarColor}">
+                <span th:text="${user.initial}">A</span>
+                <div class="photo-stats">
+                    <span title="Postlar"><svg class="i"><use href="/img/icons.svg#chat"/></svg><b th:text="${postsCount}">0</b></span>
+                    <span title="Olingan klasslar"><svg class="i"><use href="/img/icons.svg#like"/></svg><b th:text="${likesReceived}">0</b></span>
                 </div>
             </div>
-            <p th:if="${user.about}" class="about" th:text="${user.about}">Men haqimda</p>
+            <div class="hero-info">
+                <h1 th:text="${user.fullName}">Ism</h1>
+                <div class="last-seen" th:classappend="${user.online} ? 'online'">
+                    <span class="online-dot" th:if="${user.online}"></span>
+                    <span th:text="${@fmt.lastSeen(user)}">Oxirgi tashrif</span>
+                </div>
+            </div>
         </section>
 
-        <div class="profile-grid">
-            <div class="profile-side">
+        <section class="profile-panel">
+            <div class="panel-actions" th:switch="${relation}">
+                <th:block th:case="'SELF'">
+                    <a class="btn primary" th:href="@{/settings}"><svg class="i i-sm"><use href="/img/icons.svg#edit"/></svg> Profilni tahrirlash</a>
+                    <a class="btn primary" href="/#composer"><svg class="i i-sm"><use href="/img/icons.svg#plus-circle"/></svg> Nashr qilish</a>
+                </th:block>
+                <th:block th:case="'NONE'">
+                    <form th:action="@{/friends/{u}/add(u=${user.username})}" method="post" class="inline">
+                        <button class="btn primary"><svg class="i i-sm"><use href="/img/icons.svg#user-plus"/></svg> Do'stlarga qo'shish</button></form>
+                    <a class="btn primary" th:href="@{/messages/{u}(u=${user.username})}"><svg class="i i-sm"><use href="/img/icons.svg#mail"/></svg> Xabar yozish</a>
+                </th:block>
+                <th:block th:case="'REQUEST_SENT'">
+                    <form th:action="@{/friends/{u}/remove(u=${user.username})}" method="post" class="inline">
+                        <button class="btn"><svg class="i i-sm"><use href="/img/icons.svg#user-check"/></svg> So'rov yuborildi</button></form>
+                    <a class="btn primary" th:href="@{/messages/{u}(u=${user.username})}"><svg class="i i-sm"><use href="/img/icons.svg#mail"/></svg> Xabar yozish</a>
+                </th:block>
+                <th:block th:case="'REQUEST_RECEIVED'">
+                    <form th:action="@{/friends/{u}/accept(u=${user.username})}" method="post" class="inline">
+                        <button class="btn primary"><svg class="i i-sm"><use href="/img/icons.svg#user-check"/></svg> So'rovni qabul qilish</button></form>
+                    <a class="btn primary" th:href="@{/messages/{u}(u=${user.username})}"><svg class="i i-sm"><use href="/img/icons.svg#mail"/></svg> Xabar yozish</a>
+                </th:block>
+                <th:block th:case="'FRIENDS'">
+                    <span class="btn soft static"><svg class="i i-sm"><use href="/img/icons.svg#user-check"/></svg> Do'stlaringizda</span>
+                    <a class="btn primary" th:href="@{/messages/{u}(u=${user.username})}"><svg class="i i-sm"><use href="/img/icons.svg#mail"/></svg> Xabar yozish</a>
+                </th:block>
+                <details class="post-menu" th:if="${relation == 'FRIENDS' or relation == 'REQUEST_RECEIVED'}">
+                    <summary class="btn soft square" title="Yana"><svg class="i i-sm"><use href="/img/icons.svg#more"/></svg></summary>
+                    <div class="dropdown dropdown-right">
+                        <form th:action="@{/friends/{u}/remove(u=${user.username})}" method="post"
+                              onsubmit="return confirm('Rostdan ham?')">
+                            <button type="submit" class="danger" th:text="${relation == 'FRIENDS'} ? 'Do\'stlikdan chiqarish' : 'So\'rovni rad etish'">O'chirish</button>
+                        </form>
+                    </div>
+                </details>
+            </div>
+            <nav class="profile-tabs">
+                <a th:href="@{/profile/{u}(u=${user.username})}" th:classappend="${tab == 'feed'} ? 'active'">Lenta</a>
+                <a th:href="@{/profile/{u}(u=${user.username},tab='friends')}" th:classappend="${tab == 'friends'} ? 'active'">
+                    Do'stlar <span th:text="${friends.size()}">0</span></a>
+                <a th:href="@{/profile/{u}(u=${user.username},tab='about')}" th:classappend="${tab == 'about'} ? 'active'">O'zi haqida</a>
+            </nav>
+        </section>
+
+        <!-- ===== Kontent ===== -->
+        <div class="profile-content">
+            <div class="profile-main-col">
+                <th:block th:if="${tab == 'feed'}">
+                    <form th:if="${relation == 'SELF'}" id="composer" class="card composer" th:action="@{/posts}" method="post">
+                        <span class="avatar avatar-40" th:style="'background:' + ${me.avatarColor}" th:text="${me.initial}">A</span>
+                        <div class="grow">
+                            <textarea name="content" rows="2" maxlength="2000" required data-autogrow placeholder="Nima yangiliklar?"></textarea>
+                            <div class="composer-foot"><button type="submit" class="btn primary">Nashr qilish</button></div>
+                        </div>
+                    </form>
+                    <div th:if="${posts.isEmpty()}" class="card empty">
+                        <svg class="i i-xl"><use href="/img/icons.svg#chat"/></svg>
+                        <p class="muted" th:text="${relation == 'SELF'} ? 'Siz hali hech narsa yozmadingiz.' : ${user.fullName} + ' hali hech narsa yozmagan.'">Postlar yo'q</p>
+                    </div>
+                    <th:block th:each="p : ${posts}">
+                        <article th:replace="~{fragments/post :: post(${p})}"></article>
+                    </th:block>
+                </th:block>
+
+                <section class="card" th:if="${tab == 'friends'}">
+                    <h2 class="card-title">Do'stlar <span class="muted" th:text="${friends.size()}">0</span></h2>
+                    <p th:if="${friends.isEmpty()}" class="muted">Hozircha do'stlar yo'q.</p>
+                    <div class="friend-cards">
+                        <a class="friend-card" th:each="f : ${friends}" th:href="@{/profile/{u}(u=${f.username})}">
+                            <span class="avatar avatar-96" th:style="'background:' + ${f.avatarColor}" th:text="${f.initial}">A</span>
+                            <span class="name" th:text="${f.fullName}">Ism</span>
+                            <span class="muted small" th:text="${f.city ?: ' '}">Shahar</span>
+                        </a>
+                    </div>
+                </section>
+
+                <section class="card about-full" th:if="${tab == 'about'}">
+                    <h2 class="card-title">O'zi haqida</h2>
+                    <dl>
+                        <dt>Ism-familiya</dt><dd th:text="${user.fullName}">Ism</dd>
+                        <th:block th:if="${user.birthDate}">
+                            <dt>Tug'ilgan sana</dt>
+                            <dd th:text="${@fmt.date(user.birthDate)} + ' (' + ${@fmt.age(user.age)} + ')'">sana</dd>
+                        </th:block>
+                        <th:block th:if="${user.city}"><dt>Shahar</dt><dd th:text="${user.city}">Shahar</dd></th:block>
+                        <dt>Saytda</dt><dd th:text="${@fmt.date(user.createdAt.toLocalDate())} + ' dan beri'">sana</dd>
+                        <th:block th:if="${user.about}"><dt>Qisqacha</dt><dd class="about-text" th:text="${user.about}">Matn</dd></th:block>
+                    </dl>
+                </section>
+            </div>
+
+            <aside class="profile-aside">
                 <section class="card side-card">
+                    <h3 class="aside-title">O'zi haqida</h3>
+                    <ul class="info-list">
+                        <li th:if="${user.birthDate}">
+                            <svg class="i i-sm"><use href="/img/icons.svg#calendar"/></svg>
+                            <span>Tug'ilgan: <b th:text="${@fmt.date(user.birthDate)}">sana</b>
+                                <span class="muted" th:text="'(' + ${@fmt.age(user.age)} + ')'">(yosh)</span></span>
+                        </li>
+                        <li th:if="${user.city}">
+                            <svg class="i i-sm"><use href="/img/icons.svg#pin"/></svg>
+                            <span>Yashaydi: <b th:text="${user.city}">Shahar</b></span>
+                        </li>
+                        <li>
+                            <svg class="i i-sm"><use href="/img/icons.svg#users"/></svg>
+                            <span>Do'stlari: <b th:text="${friends.size()}">0</b></span>
+                        </li>
+                        <li>
+                            <svg class="i i-sm"><use href="/img/icons.svg#home"/></svg>
+                            <span>Saytda <b th:text="${@fmt.date(user.createdAt.toLocalDate())}">sana</b> dan beri</span>
+                        </li>
+                    </ul>
+                    <p th:if="${user.about}" class="aside-about" th:text="${user.about}">Matn</p>
+                    <a class="more-link" th:href="@{/profile/{u}(u=${user.username},tab='about')}">
+                        <svg class="i i-sm"><use href="/img/icons.svg#user"/></svg> Barcha ma'lumotlar</a>
+                </section>
+
+                <section class="card side-card" th:unless="${friends.isEmpty()}">
                     <div class="side-card-head">
                         <h3>Do'stlar <span class="muted" th:text="${friends.size()}">0</span></h3>
+                        <a class="small" th:href="@{/profile/{u}(u=${user.username},tab='friends')}">Hammasi</a>
                     </div>
-                    <p th:if="${friends.isEmpty()}" class="muted small">Hozircha do'stlar yo'q.</p>
                     <div class="mini-grid">
-                        <a th:each="f, st : ${friends}" th:if="${st.index < 9}" th:href="@{/profile/{u}(u=${f.username})}" class="mini-friend">
+                        <a th:each="f, st : ${friends}" th:if="${st.index < 6}" th:href="@{/profile/{u}(u=${f.username})}" class="mini-friend">
                             <span class="avatar avatar-56" th:style="'background:' + ${f.avatarColor}" th:text="${f.initial}">A</span>
                             <span th:text="${#strings.substringBefore(f.fullName + ' ', ' ')}">Ism</span>
                         </a>
                     </div>
                 </section>
-            </div>
-
-            <div class="profile-posts">
-                <form th:if="${relation == 'SELF'}" id="composer" class="card composer" th:action="@{/posts}" method="post">
-                    <span class="avatar avatar-40" th:style="'background:' + ${me.avatarColor}" th:text="${me.initial}">A</span>
-                    <div class="grow">
-                        <textarea name="content" rows="2" maxlength="2000" required data-autogrow placeholder="Nima yangiliklar?"></textarea>
-                        <div class="composer-foot"><button type="submit" class="btn primary">Nashr qilish</button></div>
-                    </div>
-                </form>
-                <div th:if="${posts.isEmpty()}" class="card empty"><p class="muted">Hozircha postlar yo'q.</p></div>
-                <th:block th:each="p : ${posts}">
-                    <article th:replace="~{fragments/post :: post(${p})}"></article>
-                </th:block>
-            </div>
+            </aside>
         </div>
     </main>
 </div>

@@ -82,6 +82,7 @@ public class DemoDataLoader implements CommandLineRunner {
         u.setFullName(fullName);
         u.setCity(city);
         u.setBirthDate(birthDate);
+        u.setLastSeenAt(java.time.LocalDateTime.now().minusHours(3 + username.length() * 2L));
         return users.save(u);
     }
 

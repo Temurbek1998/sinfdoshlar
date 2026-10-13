@@ -35,6 +35,10 @@ public class PostService {
         return posts.findByAuthorOrderByCreatedAtDesc(author);
     }
 
+    public long likesReceived(User author) {
+        return posts.countLikesReceived(author);
+    }
+
     @Transactional
     public void create(User author, String content) {
         if (content == null || content.isBlank()) return;

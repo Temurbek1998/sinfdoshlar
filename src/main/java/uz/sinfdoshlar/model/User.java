@@ -34,6 +34,8 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    private LocalDateTime lastSeenAt;
+
     /** Avatar doirasida ko'rsatiladigan bosh harf. */
     public String getInitial() {
         return fullName == null || fullName.isBlank() ? "?" : fullName.substring(0, 1).toUpperCase();
@@ -45,6 +47,18 @@ public class User {
         int hue = hues[(int) ((id == null ? 0 : id) % hues.length)];
         return "hsl(" + hue + ", 65%, 55%)";
     }
+
+    public Integer getAge() {
+        return birthDate == null ? null : java.time.Period.between(birthDate, LocalDate.now()).getYears();
+    }
+
+    /** So'nggi 5 daqiqada faol bo'lgan bo'lsa — saytda. */
+    public boolean isOnline() {
+        return lastSeenAt != null && lastSeenAt.isAfter(LocalDateTime.now().minusMinutes(5));
+    }
+
+    public LocalDateTime getLastSeenAt() { return lastSeenAt; }
+    public void setLastSeenAt(LocalDateTime lastSeenAt) { this.lastSeenAt = lastSeenAt; }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

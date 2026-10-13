@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import uz.sinfdoshlar.model.User;
 import uz.sinfdoshlar.service.FriendService;
 import uz.sinfdoshlar.service.PostService;
@@ -33,13 +34,20 @@ public class ProfileController {
     }
 
     @GetMapping("/profile/{username}")
-    public String profile(@PathVariable String username, Model model) {
+    public String profile(@PathVariable String username,
+                          @RequestParam(defaultValue = "feed") String tab, Model model) {
         User me = userService.currentUser();
         User user = userService.byUsername(username);
+        var posts = postService.byAuthor(user);
         model.addAttribute("user", user);
         model.addAttribute("relation", friendService.relation(me, user).name());
         model.addAttribute("friends", friendService.friendsOf(user));
-        model.addAttribute("posts", postService.byAuthor(user));
+        model.addAttribute("posts", posts);
+        model.addAttribute("postsCount", posts.size());
+        model.addAttribute("likesReceived", postService.likesReceived(user));
+        model.addAttribute("tab", "friends".equals(tab) || "about".equals(tab) ? tab : "feed");
+        // Profil sahifasida chap ustunda o'z rasmimiz ko'rinmaydi
+        model.addAttribute("hideSidebarAvatar", true);
         return "profile";
     }
 
