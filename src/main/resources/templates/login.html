@@ -20,6 +20,7 @@
             </nav>
             <div class="auth-body">
                 <div class="alert error" th:if="${param.error}">Login yoki parol noto'g'ri.</div>
+                <div class="alert error" th:if="${param.blocked}">Sahifangiz administrator tomonidan bloklangan.</div>
                 <div class="alert ok" th:if="${param.logout}">Tizimdan chiqdingiz.</div>
                 <div class="alert ok" th:if="${success}" th:text="${success}"></div>
                 <form th:action="@{/login}" method="post" class="form">

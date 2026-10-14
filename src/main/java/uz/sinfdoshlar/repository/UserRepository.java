@@ -22,6 +22,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUsername(String username);
 
+    long countByCreatedAtAfter(java.time.LocalDateTime time);
+
+    long countByLastSeenAtAfter(java.time.LocalDateTime time);
+
+    long countByBlockedTrue();
+
+    List<User> findTop10ByOrderByCreatedAtDesc();
+
+    List<User> findTop200ByOrderByCreatedAtDesc();
+
     /** Do'st bo'lmagan va so'rov yuborilmagan foydalanuvchilar. */
     @Query("""
             select u from User u

@@ -39,6 +39,14 @@ public class User {
     /** Profil rasmi (media_files jadvalidagi id) — bo'lmasa rangli doira. */
     private Long avatarMediaId;
 
+    /** Admin panelga kirish huquqi. */
+    @Column(name = "is_admin")
+    private Boolean admin;
+
+    /** Bloklangan foydalanuvchi saytga kira olmaydi. */
+    @Column(name = "is_blocked")
+    private Boolean blocked;
+
     /** "Mening musiqam" ro'yxati. */
     @ManyToMany
     @JoinTable(name = "user_tracks",
@@ -74,6 +82,11 @@ public class User {
     public String getAvatarLetter() {
         return avatarMediaId == null ? getInitial() : "";
     }
+
+    public boolean isAdmin() { return Boolean.TRUE.equals(admin); }
+    public void setAdmin(boolean admin) { this.admin = admin; }
+    public boolean isBlocked() { return Boolean.TRUE.equals(blocked); }
+    public void setBlocked(boolean blocked) { this.blocked = blocked; }
 
     public Long getAvatarMediaId() { return avatarMediaId; }
     public void setAvatarMediaId(Long avatarMediaId) { this.avatarMediaId = avatarMediaId; }

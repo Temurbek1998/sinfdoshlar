@@ -82,3 +82,11 @@ src/main/resources/
 - WebSocket orqali real vaqtdagi chat
 - Guruhlar va sinfdoshlarni maktab/yil bo'yicha topish
 - Bildirishnomalar
+
+## Admin panel
+
+`/admin` manzilida: statistika, foydalanuvchilarni bloklash va admin qilish, postlar, rasmlar, qo'shiqlar va videolarni o'chirish.
+
+Kim admin bo'lishi `ADMINS` muhit o'zgaruvchisida yoziladi (loginlar vergul bilan, masalan `ADMINS=bek,ali`).
+Render'da: servis → **Environment** → `ADMINS` qo'shing → saqlang (sayt qayta ishga tushadi).
+Lokal rejimda `ali` avtomatik admin. Admin panel havolasi chap menyuda va avatar menyusida chiqadi.

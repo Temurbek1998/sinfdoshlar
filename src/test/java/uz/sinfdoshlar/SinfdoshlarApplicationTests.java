@@ -32,6 +32,12 @@ class SinfdoshlarApplicationTests {
     }
 
     @Test
+    @org.springframework.security.test.context.support.WithMockUser(roles = "USER")
+    void adminPanelIsForbiddenForRegularUsers() throws Exception {
+        mvc.perform(get("/admin")).andExpect(status().isForbidden());
+    }
+
+    @Test
     void registerThenOpenFeed() throws Exception {
         mvc.perform(post("/register").with(csrf())
                         .param("fullName", "Test Testov")

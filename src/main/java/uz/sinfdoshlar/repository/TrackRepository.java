@@ -11,6 +11,11 @@ public interface TrackRepository extends JpaRepository<Track, Long> {
 
     List<Track> findTop100ByOrderByCreatedAtDesc();
 
+    /** Trekni o'chirishdan oldin uni barcha "Mening musiqam" ro'yxatlaridan olib tashlash. */
+    @org.springframework.data.jpa.repository.Modifying
+    @Query(value = "delete from user_tracks where track_id = :id", nativeQuery = true)
+    void unlinkFromUsers(@Param("id") Long id);
+
     @Query("""
             select t from Track t
             where lower(t.title) like lower(concat('%', :q, '%'))

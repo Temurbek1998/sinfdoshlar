@@ -28,18 +28,24 @@ public class LastSeenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        chain.doFilter(request, response);
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) return;
         HttpSession session = request.getSession(false);
-        if (session == null) return;
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime saved = (LocalDateTime) session.getAttribute(SESSION_KEY);
-        if (saved == null || saved.isBefore(now.minusMinutes(1))) {
-            users.touch(auth.getName(), now);
-            session.setAttribute(SESSION_KEY, now);
+        if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal()) && session != null) {
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime saved = (LocalDateTime) session.getAttribute(SESSION_KEY);
+            if (saved == null || saved.isBefore(now.minusMinutes(1))) {
+                // Admin bloklagan foydalanuvchi ochiq sessiyada ham ko'pi bilan bir daqiqada chiqarib yuboriladi
+                if (users.findByUsername(auth.getName()).map(u -> u.isBlocked()).orElse(true)) {
+                    session.invalidate();
+                    SecurityContextHolder.clearContext();
+                    response.sendRedirect("/login?blocked");
+                    return;
+                }
+                users.touch(auth.getName(), now);
+                session.setAttribute(SESSION_KEY, now);
+            }
         }
+        chain.doFilter(request, response);
     }
 
     @Override

@@ -23,6 +23,7 @@ import java.time.LocalDate;
 
 /** Baza bo'sh bo'lsa, sinab ko'rish uchun bir nechta foydalanuvchi yaratadi (parol: 123456). */
 @Component
+@org.springframework.core.annotation.Order(10)
 @ConditionalOnProperty(name = "app.demo-data", havingValue = "true")
 public class DemoDataLoader implements CommandLineRunner {
 

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin panel')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<div class="page two">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main class="main-col admin">
+        <section class="card admin-head">
+            <h2 class="card-title"><svg class="i"><use href="/img/icons.svg#shield"/></svg> Admin panel</h2>
+            <nav class="pill-tabs">
+                <a th:href="@{/admin}" th:classappend="${section == 'dashboard'} ? 'active'">Umumiy</a>
+                <a th:href="@{/admin/users}" th:classappend="${section == 'users'} ? 'active'">Foydalanuvchilar</a>
+                <a th:href="@{/admin/posts}" th:classappend="${section == 'posts'} ? 'active'">Postlar</a>
+                <a th:href="@{/admin/media}" th:classappend="${section == 'media'} ? 'active'">Foto, musiqa, video</a>
+            </nav>
+        </section>
+
+        <!-- ===== Umumiy ===== -->
+        <th:block th:if="${section == 'dashboard'}">
+            <section class="stat-grid">
+                <div class="card stat"><span class="stat-num" th:text="${stats.users}">0</span><span class="stat-label">Foydalanuvchilar</span>
+                    <span class="stat-sub" th:text="'Bugun +' + ${stats.newToday}">+0</span></div>
+                <div class="card stat"><span class="stat-num ok" th:text="${stats.online}">0</span><span class="stat-label">Hozir saytda</span>
+                    <span class="stat-sub">oxirgi 5 daqiqa</span></div>
+                <div class="card stat"><span class="stat-num" th:text="${stats.posts}">0</span><span class="stat-label">Postlar</span>
+                    <span class="stat-sub" th:text="'Bugun +' + ${stats.postsToday}">+0</span></div>
+                <div class="card stat"><span class="stat-num" th:text="${stats.comments}">0</span><span class="stat-label">Izohlar</span></div>
+                <div class="card stat"><span class="stat-num" th:text="${stats.messages}">0</span><span class="stat-label">Shaxsiy xabarlar</span></div>
+                <div class="card stat"><span class="stat-num" th:text="${stats.photos}">0</span><span class="stat-label">Rasmlar</span></div>
+                <div class="card stat"><span class="stat-num" th:text="${stats.tracks}">0</span><span class="stat-label">Qo'shiqlar</span></div>
+                <div class="card stat"><span class="stat-num" th:text="${stats.videos}">0</span><span class="stat-label">Videolar</span></div>
+                <div class="card stat"><span class="stat-num" th:text="${stats.storageMb} + ' MB'">0</span><span class="stat-label">Fayllar hajmi</span>
+                    <span class="stat-sub">Neon bepul tarifida 500 MB</span></div>
+                <div class="card stat"><span class="stat-num danger" th:text="${stats.blocked}">0</span><span class="stat-label">Bloklangan</span></div>
+            </section>
+            <section class="card">
+                <div class="card-title-row"><h2 class="card-title">Yangi ro'yxatdan o'tganlar</h2>
+                    <a class="btn btn-sm" th:href="@{/admin/users}">Hammasi</a></div>
+                <div class="admin-row" th:each="u : ${recent}">
+                    <a th:replace="~{fragments/layout :: person-link(${u})}"></a>
+                    <span class="muted small" th:text="${@fmt.ago(u.createdAt)}">vaqt</span>
+                </div>
+            </section>
+        </th:block>
+
+        <!-- ===== Foydalanuvchilar ===== -->
+        <section class="card" th:if="${section == 'users'}">
+            <form th:action="@{/admin/users}" method="get" class="search-big compact">
+                <svg class="i"><use href="/img/icons.svg#search"/></svg>
+                <input type="search" name="q" th:value="${aq}" placeholder="Ism, login yoki shahar">
+            </form>
+            <p class="muted small" th:text="${users.size()} + ' ta foydalanuvchi'">0</p>
+            <div class="admin-user" th:each="u : ${users}" th:classappend="${u.blocked} ? 'blocked'">
+                <a th:href="@{/profile/{n}(n=${u.username})}">
+                    <span class="avatar avatar-48" th:style="${u.avatarStyle}" th:text="${u.avatarLetter}">A</span></a>
+                <div class="grow">
+                    <div class="admin-user-name">
+                        <a th:href="@{/profile/{n}(n=${u.username})}" th:text="${u.fullName}">Ism</a>
+                        <span class="tag admin-tag" th:if="${u.admin}">admin</span>
+                        <span class="tag danger" th:if="${u.blocked}">bloklangan</span>
+                    </div>
+                    <div class="muted small">
+                        <span th:text="'@' + ${u.username}">@login</span>
+                        <span th:if="${u.city}" th:text="' · ' + ${u.city}"></span>
+                        <span th:text="' · postlar: ' + ${postCounts.get(u.id)}"></span>
+                    </div>
+                    <div class="muted small">
+                        <span th:text="'Ro\'yxatdan: ' + ${@fmt.date(u.createdAt.toLocalDate())}">sana</span> ·
+                        <span th:text="${@fmt.lastSeen(u)}">oxirgi</span>
+                    </div>
+                </div>
+                <div class="admin-actions" th:unless="${u.id == me.id}">
+                    <form th:if="${u.blocked}" th:action="@{/admin/users/{id}/block(id=${u.id})}" method="post">
+                        <input type="hidden" name="value" value="false">
+                        <button class="btn btn-sm">Blokdan chiqarish</button>
+                    </form>
+                    <form th:unless="${u.blocked}" th:action="@{/admin/users/{id}/block(id=${u.id})}" method="post"
+                          onsubmit="return confirm('Foydalanuvchini bloklaysizmi?')">
+                        <input type="hidden" name="value" value="true">
+                        <button class="btn btn-sm danger-soft"><svg class="i i-sm"><use href="/img/icons.svg#ban"/></svg> Bloklash</button>
+                    </form>
+                    <form th:action="@{/admin/users/{id}/admin(id=${u.id})}" method="post">
+                        <input type="hidden" name="value" th:value="${!u.admin}">
+                        <button class="btn btn-sm" th:text="${u.admin} ? 'Adminlikdan olish' : 'Admin qilish'">Admin qilish</button>
+                    </form>
+                </div>
+                <span class="muted small" th:if="${u.id == me.id}">Siz</span>
+            </div>
+        </section>
+
+        <!-- ===== Postlar ===== -->
+        <section class="card" th:if="${section == 'posts'}">
+            <h2 class="card-title">Oxirgi postlar</h2>
+            <p th:if="${posts.isEmpty()}" class="muted">Postlar yo'q.</p>
+            <div class="admin-post" th:each="p : ${posts}">
+                <a th:href="@{/posts/{id}(id=${p.id})}" class="admin-post-thumb" th:if="${p.imageUrl}"><img th:src="${p.imageUrl}" alt="" loading="lazy"></a>
+                <div class="grow">
+                    <div class="small"><a class="name" th:href="@{/profile/{n}(n=${p.author.username})}" th:text="${p.author.fullName}">Ism</a>
+                        <span class="muted" th:text="' · ' + ${@fmt.ago(p.createdAt)} + ' · ' + ${p.likedBy.size()} + ' klass · ' + ${p.comments.size()} + ' izoh'"></span></div>
+                    <a class="admin-post-text" th:href="@{/posts/{id}(id=${p.id})}" th:text="${#strings.isEmpty(p.content)} ? '(faqat rasm)' : ${#strings.abbreviate(p.content, 220)}">matn</a>
+                </div>
+                <form th:action="@{/admin/posts/{id}/delete(id=${p.id})}" method="post" onsubmit="return confirm('Postni o\'chirasizmi?')">
+                    <button class="icon-btn" title="O'chirish"><svg class="i i-sm"><use href="/img/icons.svg#trash"/></svg></button></form>
+            </div>
+        </section>
+
+        <!-- ===== Media ===== -->
+        <th:block th:if="${section == 'media'}">
+            <section class="card">
+                <h2 class="card-title">Rasmlar <span class="muted" th:text="${photos.size()}">0</span></h2>
+                <p th:if="${photos.isEmpty()}" class="muted">Rasmlar yo'q.</p>
+                <div class="photo-grid admin-photos">
+                    <div class="photo-tile" th:each="ph : ${photos}">
+                        <a th:href="${ph.url}" target="_blank"><img th:src="${ph.url}" loading="lazy" alt=""></a>
+                        <div class="photo-actions">
+                            <form th:action="@{/admin/photos/{id}/delete(id=${ph.id})}" method="post" onsubmit="return confirm('Rasmni o\'chirasizmi?')">
+                                <button class="icon-btn light" title="O'chirish"><svg class="i i-sm"><use href="/img/icons.svg#trash"/></svg></button></form>
+                        </div>
+                        <div class="photo-caption" th:text="${ph.owner.fullName}">Ism</div>
+                    </div>
+                </div>
+            </section>
+            <section class="card">
+                <h2 class="card-title">Qo'shiqlar <span class="muted" th:text="${tracks.size()}">0</span></h2>
+                <p th:if="${tracks.isEmpty()}" class="muted">Qo'shiqlar yo'q.</p>
+                <div class="admin-row" th:each="t : ${tracks}">
+                    <svg class="i" style="color:var(--brand)"><use href="/img/icons.svg#music"/></svg>
+                    <div class="grow"><b th:text="${t.title}">Nomi</b> <span class="muted small" th:text="${t.artist}"></span>
+                        <div class="muted small" th:text="${t.owner.fullName} + ' · ' + ${@fmt.ago(t.createdAt)}">kim</div></div>
+                    <audio controls preload="none" th:src="${t.url}"></audio>
+                    <form th:action="@{/admin/tracks/{id}/delete(id=${t.id})}" method="post" onsubmit="return confirm('Qo\'shiqni o\'chirasizmi?')">
+                        <button class="icon-btn" title="O'chirish"><svg class="i i-sm"><use href="/img/icons.svg#trash"/></svg></button></form>
+                </div>
+            </section>
+            <section class="card">
+                <h2 class="card-title">Videolar <span class="muted" th:text="${videos.size()}">0</span></h2>
+                <p th:if="${videos.isEmpty()}" class="muted">Videolar yo'q.</p>
+                <div class="admin-row" th:each="v : ${videos}">
+                    <a class="admin-video-thumb" th:href="@{/video/{id}(id=${v.id})}"><img th:src="${v.thumbnail}" alt="" loading="lazy"></a>
+                    <div class="grow"><a th:href="@{/video/{id}(id=${v.id})}"><b th:text="${v.title}">Nomi</b></a>
+                        <div class="muted small" th:text="${v.owner.fullName} + ' · ' + ${@fmt.ago(v.createdAt)}">kim</div></div>
+                    <form th:action="@{/admin/videos/{id}/delete(id=${v.id})}" method="post" onsubmit="return confirm('Videoni o\'chirasizmi?')">
+                        <button class="icon-btn" title="O'chirish"><svg class="i i-sm"><use href="/img/icons.svg#trash"/></svg></button></form>
+                </div>
+            </section>
+        </th:block>
+    </main>
+</div>
+<nav th:replace="~{fragments/layout :: mobile-nav}"></nav>
+</body>
+</html>

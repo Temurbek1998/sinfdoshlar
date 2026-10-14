@@ -53,6 +53,7 @@
                         <span><b th:text="${me.fullName}">Ism</b><br><small class="muted">Mening sahifam</small></span>
                     </a>
                     <a th:href="@{/settings}"><svg class="i"><use href="/img/icons.svg#settings"/></svg> Sozlamalar</a>
+                    <a th:if="${me.admin}" th:href="@{/admin}"><svg class="i"><use href="/img/icons.svg#shield"/></svg> Admin panel</a>
                     <form th:action="@{/logout}" method="post">
                         <button type="submit"><svg class="i"><use href="/img/icons.svg#logout"/></svg> Chiqish</button>
                     </form>
@@ -121,6 +122,8 @@
             <svg class="i"><use href="/img/icons.svg#search"/></svg><span>Odamlarni topish</span></a>
         <a th:href="@{/settings}" th:classappend="${currentPath == '/settings'} ? 'active'">
             <svg class="i"><use href="/img/icons.svg#settings"/></svg><span>Sozlamalar</span></a>
+        <a th:if="${me.admin}" th:href="@{/admin}" th:classappend="${#strings.startsWith(currentPath, '/admin')} ? 'active'">
+            <svg class="i"><use href="/img/icons.svg#shield"/></svg><span>Admin panel</span></a>
     </nav>
     <div class="side-sep"></div>
     <form th:action="@{/logout}" method="post" class="side-menu">

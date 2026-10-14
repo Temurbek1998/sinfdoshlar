@@ -11,4 +11,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     List<Photo> findByOwnerOrderByCreatedAtDesc(User owner);
 
     long countByOwner(User owner);
+
+    List<Photo> findTop120ByOrderByCreatedAtDesc();
 }

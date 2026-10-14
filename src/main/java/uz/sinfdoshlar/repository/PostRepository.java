@@ -16,6 +16,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByAuthorOrderByCreatedAtDesc(User author);
 
+    List<Post> findTop100ByOrderByCreatedAtDesc();
+
+    long countByAuthor(User author);
+
+    long countByCreatedAtAfter(java.time.LocalDateTime time);
+
     @Query("select count(l) from Post p join p.likedBy l where p.author = :author")
     long countLikesReceived(@Param("author") User author);
 }
